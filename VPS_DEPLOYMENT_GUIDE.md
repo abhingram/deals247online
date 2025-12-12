@@ -4,8 +4,8 @@
 
 Before starting, collect this information:
 
-- [ ] VPS IP Address: `___________________`
-- [ ] SSH Username: `___________________`
+- [ ] VPS IP Address: `72.61.235.42 / srv1174752.hstgr.cloud`
+- [ ] SSH Username: `root`
 - [ ] SSH Password/Key: `___________________`
 - [ ] Domain Name: `___________________`
 - [ ] MySQL Root Password (you'll create): `___________________`
