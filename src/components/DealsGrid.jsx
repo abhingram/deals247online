@@ -145,55 +145,78 @@ const DealsGrid = ({ searchQuery, selectedCategory, filterType }) => {
   };
 
   const renderDealListView = () => (
-    <div className="space-y-4">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
       {deals.map((deal, index) => (
         <motion.div
           key={deal.id}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: index * 0.05 }}
-          className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+          className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
           onClick={() => {/* Handle deal click */}}
         >
-          <div className="flex items-center space-x-4">
-            <img
-              src={deal.image || "https://images.unsplash.com/photo-1595872018818-97555653a011"}
-              alt={deal.title}
-              className="w-16 h-16 object-cover rounded-md flex-shrink-0"
-            />
-            <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-gray-900 truncate">{deal.title}</h3>
-              <div className="flex items-center space-x-4 mt-1 text-sm text-gray-500 flex-wrap">
-                <span className="font-medium text-gray-700">{deal.store}</span>
-                <span className="text-green-600 font-semibold">↓{deal.discount}%</span>
-                <span className="font-bold text-black">${deal.discountedPrice}</span>
-                <span className="line-through">${deal.originalPrice}</span>
-                <div className="flex items-center">
-                  <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
-                  <span>{deal.rating}</span>
-                  <span className="ml-1">({deal.reviews})</span>
+          <div className="p-4">
+            {/* Row 1: Deal Title - Full Width */}
+            <h3 className="font-medium text-gray-900 text-sm line-clamp-2 mb-3">{deal.title}</h3>
+
+            {/* Content Section */}
+            <div className="flex gap-4">
+              {/* Left Column: Product Info */}
+              <div className="flex-1 flex flex-col justify-end">
+                {/* Row 2: Discount, Prices, Store - Equal width items */}
+                <div className="grid grid-cols-4 gap-2 mb-2 text-sm">
+                  <div className="flex items-center justify-center bg-green-100 text-green-700 px-2 py-1 rounded-md">
+                    <span>↓{deal.discount}%</span>
+                  </div>
+                  <div className="flex items-center justify-center font-bold text-gray-900">
+                    ${deal.discountedPrice}
+                  </div>
+                  <div className="flex items-center justify-center text-gray-400 line-through">
+                    ${deal.originalPrice}
+                  </div>
+                  <div className="flex items-center justify-center bg-orange-50 text-orange-700 px-2 py-1 rounded-md">
+                    {deal.store}
+                  </div>
                 </div>
-                <span className="flex items-center">
-                  <Clock className="h-3 w-3 mr-1" />
-                  {deal.expiresIn}
-                </span>
+
+                {/* Row 3: Rating, Verified, Clicks, Expiration - Equal width items */}
+                <div className="grid grid-cols-4 gap-2 text-sm">
+                  <div className="flex items-center justify-center bg-yellow-50 text-yellow-700 px-2 py-1 rounded-md">
+                    <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400 mr-1" />
+                    <span>{deal.rating}</span>
+                  </div>
+                  
+                  {deal.verified ? (
+                    <div className="flex items-center justify-center bg-green-50 text-green-700 px-2 py-1 rounded-md">
+                      <CheckCircle className="h-3.5 w-3.5 mr-1" />
+                      <span className="text-xs">Verified</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center bg-yellow-50 text-yellow-600 px-2 py-1 rounded-md">
+                      <AlertTriangle className="h-3.5 w-3.5 mr-1" />
+                      <span className="text-xs">Unverified</span>
+                    </div>
+                  )}
+
+                  <div className="flex items-center justify-center bg-blue-50 text-blue-700 px-2 py-1 rounded-md">
+                    <Shield className="h-3.5 w-3.5 mr-1" />
+                    <span>{deal.total_clicks || 55}</span>
+                  </div>
+
+                  <div className="flex items-center justify-center bg-red-50 text-red-700 px-2 py-1 rounded-md">
+                    <Clock className="h-3.5 w-3.5 mr-1" />
+                    <span className="text-xs">{deal.expiresIn}</span>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center space-x-2 mt-2">
-                {deal.verified ? (
-                  <div className="flex items-center bg-green-50 text-green-700 px-2 py-1 rounded-full text-xs">
-                    <CheckCircle className="h-3 w-3 mr-1" />
-                    Verified
-                  </div>
-                ) : (
-                  <div className="flex items-center bg-yellow-50 text-yellow-700 px-2 py-1 rounded-full text-xs">
-                    <AlertTriangle className="h-3 w-3 mr-1" />
-                    Unverified
-                  </div>
-                )}
-                <div className="flex items-center bg-blue-50 text-blue-700 px-2 py-1 rounded-full text-xs">
-                  <Shield className="h-3 w-3 mr-1" />
-                  <span>98% Trust</span>
-                </div>
+
+              {/* Right Column: Image */}
+              <div className="flex-shrink-0 flex items-end">
+                <img
+                  src={deal.image || "https://images.unsplash.com/photo-1595872018818-97555653a011"}
+                  alt={deal.title}
+                  className="w-28 h-24 object-cover rounded-lg shadow-sm"
+                />
               </div>
             </div>
           </div>
@@ -284,15 +307,33 @@ const DealsGrid = ({ searchQuery, selectedCategory, filterType }) => {
                   ))}
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {[...Array(6)].map((_, i) => (
-                    <div key={i} className="bg-white border border-gray-200 rounded-lg p-4 animate-pulse">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-16 h-16 bg-gray-200 rounded-md flex-shrink-0"></div>
-                        <div className="flex-1 space-y-2">
-                          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                          <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-                          <div className="h-3 bg-gray-200 rounded w-1/3"></div>
+                    <div key={i} className="bg-white border border-gray-200 rounded-lg shadow-sm animate-pulse">
+                      <div className="p-4">
+                        {/* Title skeleton */}
+                        <div className="h-3.5 bg-gray-200 rounded w-3/4 mb-3"></div>
+                        
+                        {/* Content skeleton */}
+                        <div className="flex gap-4">
+                          <div className="flex-1 space-y-2.5">
+                            {/* Row 2 skeleton */}
+                            <div className="flex items-center gap-2">
+                              <div className="h-6 w-12 bg-gray-200 rounded-md"></div>
+                              <div className="h-6 w-16 bg-gray-200 rounded"></div>
+                              <div className="h-5 w-14 bg-gray-200 rounded"></div>
+                              <div className="h-5 w-16 bg-gray-200 rounded-md ml-auto"></div>
+                            </div>
+                            {/* Row 3 skeleton */}
+                            <div className="flex items-center gap-2">
+                              <div className="h-6 w-14 bg-gray-200 rounded-md"></div>
+                              <div className="h-6 w-16 bg-gray-200 rounded-md"></div>
+                              <div className="h-6 w-12 bg-gray-200 rounded-md"></div>
+                              <div className="h-6 w-20 bg-gray-200 rounded-md"></div>
+                            </div>
+                          </div>
+                          {/* Image skeleton */}
+                          <div className="w-28 h-24 bg-gray-200 rounded-lg flex-shrink-0"></div>
                         </div>
                       </div>
                     </div>

@@ -40,6 +40,8 @@ const SubmitDeal = () => {
           api.getCategories(),
           api.getStores()
         ]);
+        console.log('Categories loaded:', categoriesData);
+        console.log('Stores loaded:', storesData);
         setCategories(categoriesData);
         setStores(storesData);
       } catch (error) {
@@ -241,16 +243,22 @@ const SubmitDeal = () => {
                     name="store"
                     value={formData.store}
                     onChange={handleInputChange}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     required
+                    disabled={stores.length === 0}
                   >
-                    <option value="">Select a store</option>
+                    <option value="">
+                      {stores.length === 0 ? 'Loading stores...' : 'Select a store'}
+                    </option>
                     {stores.map(store => (
                       <option key={store.id} value={store.name}>
                         {store.name}
                       </option>
                     ))}
                   </select>
+                  {stores.length === 0 && (
+                    <p className="text-xs text-gray-500 mt-1">Loading available stores...</p>
+                  )}
                 </div>
 
                 <div>
@@ -260,16 +268,22 @@ const SubmitDeal = () => {
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     required
+                    disabled={categories.length === 0}
                   >
-                    <option value="">Select a category</option>
+                    <option value="">
+                      {categories.length === 0 ? 'Loading categories...' : 'Select a category'}
+                    </option>
                     {categories.map(category => (
                       <option key={category.id} value={category.name}>
                         {category.name}
                       </option>
                     ))}
                   </select>
+                  {categories.length === 0 && (
+                    <p className="text-xs text-gray-500 mt-1">Loading available categories...</p>
+                  )}
                 </div>
 
                 <div>
