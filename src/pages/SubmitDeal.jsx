@@ -36,14 +36,18 @@ const SubmitDeal = () => {
     // Load categories and stores
     const loadData = async () => {
       try {
+        console.log('Starting to load categories and stores...');
         const [categoriesData, storesData] = await Promise.all([
           api.getCategories(),
           api.getStores()
         ]);
         console.log('Categories loaded:', categoriesData);
         console.log('Stores loaded:', storesData);
-        setCategories(categoriesData);
-        setStores(storesData);
+        console.log('Categories array length:', Array.isArray(categoriesData) ? categoriesData.length : 'Not an array');
+        console.log('Stores array length:', Array.isArray(storesData) ? storesData.length : 'Not an array');
+        
+        setCategories(Array.isArray(categoriesData) ? categoriesData : []);
+        setStores(Array.isArray(storesData) ? storesData : []);
       } catch (error) {
         console.error('Error loading data:', error);
         toast({
@@ -219,6 +223,11 @@ const SubmitDeal = () => {
             <CardDescription>
               Fill in the details about the deal you want to share.
             </CardDescription>
+            {/* Debug info */}
+            <div className="mt-2 p-2 bg-gray-100 rounded text-xs">
+              <p>Categories loaded: {categories.length}</p>
+              <p>Stores loaded: {stores.length}</p>
+            </div>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">

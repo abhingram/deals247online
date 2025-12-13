@@ -102,6 +102,13 @@ const AdminPanel = () => {
 
   useEffect(() => {
     console.log('AdminPanel: useEffect triggered', { activeTab, isAdmin, analyticsLoading, analyticsSummary: analytics.summary });
+    
+    // Load initial data when admin panel is accessed
+    if (isAdmin && categories.length === 0 && stores.length === 0 && !loadingData) {
+      console.log('AdminPanel: Loading initial data...');
+      loadData();
+    }
+    
     if (activeTab === 'analytics' && isAdmin && !analyticsLoading && !analytics.summary) {
       console.log('AdminPanel: Calling loadAnalytics');
       loadAnalytics();
@@ -136,10 +143,14 @@ const AdminPanel = () => {
       console.log('AdminPanel: dealsData:', dealsData);
       console.log('AdminPanel: dealsData.deals:', dealsData.deals);
       console.log('AdminPanel: dealsData.deals length:', dealsData.deals?.length || 0);
+      console.log('AdminPanel: categoriesData:', categoriesData);
+      console.log('AdminPanel: categoriesData length:', categoriesData?.length || 0);
+      console.log('AdminPanel: storesData:', storesData);
+      console.log('AdminPanel: storesData length:', storesData?.length || 0);
 
       setDeals(dealsData.deals || []);
-      setCategories(categoriesData);
-      setStores(storesData);
+      setCategories(Array.isArray(categoriesData) ? categoriesData : []);
+      setStores(Array.isArray(storesData) ? storesData : []);
 
       console.log('AdminPanel: State updated with deals:', dealsData.deals?.length || 0);
 
@@ -1298,6 +1309,11 @@ const AdminPanel = () => {
                 <CardDescription>
                   Add a new deal to the platform. As an admin, you can mark deals as verified.
                 </CardDescription>
+                {/* Debug info */}
+                <div className="mt-2 p-2 bg-gray-100 rounded text-xs">
+                  <p>Categories loaded: {categories.length}</p>
+                  <p>Stores loaded: {stores.length}</p>
+                </div>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmitDeal} className="space-y-6">
