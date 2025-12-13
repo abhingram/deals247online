@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion';
 import { Sparkles, Target, Heart, Users, TrendingUp, Shield } from 'lucide-react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export default function AboutUs() {
   const values = [
@@ -43,7 +45,9 @@ export default function AboutUs() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
+    <>
+      <Header />
+      <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
         <motion.div
@@ -298,5 +302,7 @@ export default function AboutUs() {
         </motion.div>
       </section>
     </div>
+    <Footer />
+    </>
   );
 }

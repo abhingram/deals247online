@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Mail, MessageSquare, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import API_BASE_URL from '../config/api';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export default function ContactUs() {
   const [formData, setFormData] = useState({
@@ -58,7 +60,9 @@ export default function ContactUs() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white py-12 px-4 sm:px-6 lg:px-8">
+    <>
+      <Header />
+      <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
@@ -324,5 +328,7 @@ export default function ContactUs() {
         </motion.div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
