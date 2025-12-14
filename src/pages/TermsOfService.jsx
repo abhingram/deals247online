@@ -6,33 +6,33 @@ export default function TermsOfService() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white py-6 sm:py-8 md:py-12 px-3 sm:px-4 md:px-6 lg:px-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 md:p-12"
+        className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-4 sm:p-6 md:p-8 lg:p-12"
       >
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">Terms of Service</h1>
-        <p className="text-sm text-gray-600 mb-8">Last Updated: December 12, 2025</p>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight">Terms of Service</h1>
+        <p className="text-xs sm:text-sm text-gray-600 mb-6 sm:mb-8">Last Updated: December 12, 2025</p>
 
-        <div className="prose prose-purple max-w-none">
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Acceptance of Terms</h2>
-            <p className="text-gray-700 mb-4">
+        <div className="prose prose-purple max-w-none text-sm sm:text-base">
+          <section className="mb-6 sm:mb-8">
+            <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3 sm:mb-4 leading-tight">1. Acceptance of Terms</h2>
+            <p className="text-gray-700 mb-3 sm:mb-4 leading-relaxed">
               Welcome to Deals247! By accessing or using our website at deals247.online (the "Site"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use our services.
             </p>
-            <p className="text-gray-700">
+            <p className="text-gray-700 leading-relaxed">
               These Terms constitute a legally binding agreement between you and Deals247 ("we," "us," or "our"). We reserve the right to modify these Terms at any time, and your continued use of the Site after changes constitutes acceptance of the updated Terms.
             </p>
           </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">2. Description of Service</h2>
-            <p className="text-gray-700 mb-4">
+          <section className="mb-6 sm:mb-8">
+            <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3 sm:mb-4 leading-tight">2. Description of Service</h2>
+            <p className="text-gray-700 mb-3 sm:mb-4 leading-relaxed">
               Deals247 is a platform that aggregates and displays deals, discounts, coupons, and promotional offers from various online and offline retailers. Our services include:
             </p>
-            <ul className="list-disc pl-6 mb-4 text-gray-700 space-y-2">
+            <ul className="list-disc pl-5 sm:pl-6 mb-3 sm:mb-4 text-gray-700 space-y-2 leading-relaxed">
               <li>Browse and search for deals across multiple categories</li>
               <li>Save favorite deals and receive notifications</li>
               <li>Submit and share deals with the community</li>

@@ -143,20 +143,30 @@ const DealComparison = ({ comparisonId, onClose }) => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">{comparison.name}</h2>
-        <div className="space-x-2">
-          <Button variant="outline" onClick={deleteComparison}>
-            Delete Comparison
+    <div className="bg-white rounded-lg shadow-md p-3 sm:p-4 md:p-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold leading-tight">{comparison.name}</h2>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            onClick={deleteComparison}
+            className="flex-1 sm:flex-none min-h-[44px] text-sm sm:text-base"
+          >
+            <span className="hidden sm:inline">Delete Comparison</span>
+            <span className="sm:hidden">Delete</span>
           </Button>
-          <Button variant="outline" onClick={onClose}>
+          <Button 
+            variant="outline" 
+            onClick={onClose}
+            className="flex-1 sm:flex-none min-h-[44px] text-sm sm:text-base"
+          >
             Close
           </Button>
         </div>
       </div>
 
-      <div className="overflow-x-auto">
+      {/* Desktop Table View (md and up) */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-50">
@@ -276,7 +286,86 @@ const DealComparison = ({ comparisonId, onClose }) => {
         </table>
       </div>
 
-      <div className="mt-6 text-center text-sm text-gray-500">
+      {/* Mobile Card View (below md) */}
+      <div className="md:hidden space-y-4">
+        {deals.map((deal) => (
+          <div key={deal.id} className="bg-white border-2 border-gray-200 rounded-lg p-4 space-y-3">
+            {/* Header */}
+            <div className="flex items-start justify-between gap-2 pb-3 border-b">
+              <h3 className="font-semibold text-base line-clamp-2 flex-1">{deal.title}</h3>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => removeDeal(deal.id)}
+                className="text-red-600 hover:text-red-800 min-w-[44px] min-h-[44px] flex-shrink-0"
+              >
+                Remove
+              </Button>
+            </div>
+
+            {/* Details Grid */}
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <span className="text-gray-600 font-medium">Store</span>
+                <p className="text-gray-900">{deal.store}</p>
+              </div>
+              <div>
+                <span className="text-gray-600 font-medium">Rating</span>
+                <p className="text-gray-900">{deal.rating ? `${deal.rating}/5` : 'N/A'}</p>
+              </div>
+              <div>
+                <span className="text-gray-600 font-medium">Original Price</span>
+                <p className="text-gray-900">${deal.originalPrice?.toFixed(2) || 'N/A'}</p>
+              </div>
+              <div>
+                <span className="text-gray-600 font-medium">Deal Price</span>
+                <p className="text-green-600 font-semibold">${deal.dealPrice?.toFixed(2) || 'N/A'}</p>
+              </div>
+              <div>
+                <span className="text-gray-600 font-medium">Discount</span>
+                <p className="text-orange-600 font-semibold">{deal.discountPercentage ? `${deal.discountPercentage}%` : 'N/A'}</p>
+              </div>
+              <div>
+                <span className="text-gray-600 font-medium">Savings</span>
+                <p className="text-green-600 font-semibold">${deal.savings?.toFixed(2) || 'N/A'}</p>
+              </div>
+              <div className="col-span-2">
+                <span className="text-gray-600 font-medium">Categories</span>
+                <p className="text-gray-900">{deal.categories?.join(', ') || 'N/A'}</p>
+              </div>
+              <div className="col-span-2">
+                <span className="text-gray-600 font-medium">Expires</span>
+                <p className="text-gray-900">{deal.expiresAt ? new Date(deal.expiresAt).toLocaleDateString() : 'N/A'}</p>
+              </div>
+              {deal.description && (
+                <div className="col-span-2">
+                  <span className="text-gray-600 font-medium">Description</span>
+                  <p className="text-gray-900 text-sm line-clamp-3">{deal.description}</p>
+                </div>
+              )}
+            </div>
+
+            {/* Actions */}
+            <div className="pt-3 border-t space-y-2">
+              <Button size="sm" className="w-full min-h-[44px]" asChild>
+                <a href={deal.url} target="_blank" rel="noopener noreferrer">
+                  View Deal
+                </a>
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                className="w-full min-h-[44px]"
+                onClick={() => window.open(deal.url, '_blank')}
+              >
+                Open in New Tab
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4 sm:mt-6 text-center text-xs sm:text-sm text-gray-500">
         Comparing {deals.length} deal{deals.length !== 1 ? 's' : ''}
       </div>
     </div>

@@ -62,60 +62,60 @@ export default function ContactUs() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white py-8 sm:py-12 px-3 sm:px-4 md:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">Contact Us</h1>
+          <p className="text-base sm:text-xl text-gray-600 max-w-2xl mx-auto px-4">
             Have questions, feedback, or need assistance? We're here to help! Reach out to us using the form below or through any of our contact channels.
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Contact Information */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="lg:col-span-1 space-y-6"
+            className="lg:col-span-1 space-y-4 sm:space-y-6"
           >
             {/* Email Card */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <div className="flex items-center mb-4">
-                <div className="bg-purple-100 p-3 rounded-lg">
-                  <Mail className="w-6 h-6 text-purple-600" />
+            <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+              <div className="flex items-center mb-3 sm:mb-4">
+                <div className="bg-purple-100 p-2 sm:p-3 rounded-lg">
+                  <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
                 </div>
-                <h3 className="ml-3 text-lg font-semibold text-gray-900">Email Us</h3>
+                <h3 className="ml-3 text-base sm:text-lg font-semibold text-gray-900">Email Us</h3>
               </div>
-              <p className="text-gray-600 mb-2">
+              <p className="text-sm sm:text-base text-gray-600 mb-2">
                 Send us an email and we'll respond within 24-48 hours
               </p>
               <a 
                 href="mailto:D247Online@outlook.com" 
-                className="text-purple-600 hover:underline font-medium"
+                className="text-purple-600 hover:underline font-medium text-sm sm:text-base break-all"
               >
                 D247Online@outlook.com
               </a>
             </div>
 
             {/* Support Card */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <div className="flex items-center mb-4">
-                <div className="bg-indigo-100 p-3 rounded-lg">
-                  <MessageSquare className="w-6 h-6 text-indigo-600" />
+            <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+              <div className="flex items-center mb-3 sm:mb-4">
+                <div className="bg-indigo-100 p-2 sm:p-3 rounded-lg">
+                  <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600" />
                 </div>
-                <h3 className="ml-3 text-lg font-semibold text-gray-900">Support</h3>
+                <h3 className="ml-3 text-base sm:text-lg font-semibold text-gray-900">Support</h3>
               </div>
-              <p className="text-gray-600 mb-4">
+              <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">
                 Need help with your account, deals, or technical issues?
               </p>
-              <ul className="space-y-2 text-gray-600">
+              <ul className="space-y-1.5 sm:space-y-2 text-sm sm:text-base text-gray-600">
                 <li>• Account & Login Issues</li>
                 <li>• Deal Submissions</li>
                 <li>• Technical Support</li>
@@ -124,21 +124,21 @@ export default function ContactUs() {
             </div>
 
             {/* Response Time */}
-            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg shadow-lg p-6 text-white">
-              <h3 className="text-lg font-semibold mb-2">Response Time</h3>
-              <p className="text-purple-100">
+            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg shadow-lg p-4 sm:p-6 text-white">
+              <h3 className="text-base sm:text-lg font-semibold mb-2">Response Time</h3>
+              <p className="text-sm sm:text-base text-purple-100">
                 We typically respond to all inquiries within 24-48 hours during business days.
               </p>
             </div>
 
             {/* Quick Links */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h3>
-              <div className="space-y-2">
-                <a href="/privacy-policy" className="block text-purple-600 hover:underline">Privacy Policy</a>
-                <a href="/terms-of-service" className="block text-purple-600 hover:underline">Terms of Service</a>
-                <a href="/cookie-policy" className="block text-purple-600 hover:underline">Cookie Policy</a>
-                <a href="/about" className="block text-purple-600 hover:underline">About Us</a>
+            <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Quick Links</h3>
+              <div className="space-y-1.5 sm:space-y-2">
+                <a href="/privacy-policy" className="block text-sm sm:text-base text-purple-600 hover:underline">Privacy Policy</a>
+                <a href="/terms-of-service" className="block text-sm sm:text-base text-purple-600 hover:underline">Terms of Service</a>
+                <a href="/cookie-policy" className="block text-sm sm:text-base text-purple-600 hover:underline">Cookie Policy</a>
+                <a href="/about" className="block text-sm sm:text-base text-purple-600 hover:underline">About Us</a>
               </div>
             </div>
           </motion.div>
@@ -150,15 +150,15 @@ export default function ContactUs() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="lg:col-span-2"
           >
-            <div className="bg-white rounded-lg shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h2>
+            <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 md:p-8">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Send us a Message</h2>
               
               {/* Status Messages */}
               {status.message && (
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`mb-6 p-4 rounded-lg flex items-start gap-3 ${
+                  className={`mb-4 sm:mb-6 p-3 sm:p-4 rounded-lg flex items-start gap-2 sm:gap-3 ${
                     status.type === 'success' 
                       ? 'bg-green-50 border border-green-200' 
                       : 'bg-red-50 border border-red-200'
@@ -169,13 +169,13 @@ export default function ContactUs() {
                   ) : (
                     <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                   )}
-                  <p className={status.type === 'success' ? 'text-green-800' : 'text-red-800'}>
+                  <p className={`text-sm sm:text-base ${status.type === 'success' ? 'text-green-800' : 'text-red-800'}`}>
                     {status.message}
                   </p>
                 </motion.div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                 {/* Name */}
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -188,7 +188,7 @@ export default function ContactUs() {
                     required
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base min-h-[44px]"
                     placeholder="John Doe"
                   />
                 </div>
@@ -205,7 +205,7 @@ export default function ContactUs() {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base min-h-[44px]"
                     placeholder="john@example.com"
                   />
                 </div>
@@ -221,7 +221,7 @@ export default function ContactUs() {
                     required
                     value={formData.subject}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base min-h-[44px]"
                   >
                     <option value="">Select a subject</option>
                     <option value="general">General Inquiry</option>
@@ -246,14 +246,14 @@ export default function ContactUs() {
                     value={formData.message}
                     onChange={handleChange}
                     rows="6"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none text-base"
                     placeholder="Tell us how we can help you..."
                   ></textarea>
                 </div>
 
                 {/* Privacy Notice */}
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                  <p className="text-sm text-gray-600">
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 sm:p-4">
+                  <p className="text-xs sm:text-sm text-gray-600">
                     By submitting this form, you agree to our{' '}
                     <a href="/privacy-policy" className="text-purple-600 hover:underline">Privacy Policy</a>
                     {' '}and{' '}
@@ -268,7 +268,7 @@ export default function ContactUs() {
                   disabled={isSubmitting}
                   whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
                   whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-                  className={`w-full py-4 rounded-lg font-semibold text-white flex items-center justify-center gap-2 transition ${
+                  className={`w-full py-3 sm:py-4 rounded-lg font-semibold text-white flex items-center justify-center gap-2 transition min-h-[44px] text-base ${
                     isSubmitting
                       ? 'bg-purple-400 cursor-not-allowed'
                       : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700'
@@ -277,12 +277,12 @@ export default function ContactUs() {
                   {isSubmitting ? (
                     <>
                       <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      Sending...
+                      <span className="text-sm sm:text-base">Sending...</span>
                     </>
                   ) : (
                     <>
-                      <Send className="w-5 h-5" />
-                      Send Message
+                      <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span className="text-sm sm:text-base">Send Message</span>
                     </>
                   )}
                 </motion.button>

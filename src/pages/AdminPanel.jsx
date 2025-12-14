@@ -37,7 +37,6 @@ const AdminPanel = () => {
     discount: '',
     category: '',
     image: '',
-    expires_at: '',
     verified: false
   });
 
@@ -515,7 +514,6 @@ const AdminPanel = () => {
         discount: '',
         category: '',
         image: '',
-        expires_at: '',
         verified: false
       });
 
@@ -695,29 +693,52 @@ const AdminPanel = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <div className="flex items-center gap-4 mb-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
+        <div className="mb-6 md:mb-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-4">
             <Button
               variant="ghost"
               onClick={() => navigate('/')}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 min-h-[44px]"
             >
               <ArrowLeft className="h-4 w-4" />
-              Back to Deals
+              <span className="hidden sm:inline">Back to Deals</span>
+              <span className="sm:hidden">Back</span>
             </Button>
             <div className="flex items-center gap-2">
-              <Shield className="h-6 w-6 text-orange-500" />
-              <h1 className="text-3xl font-bold text-gray-900">Admin Panel</h1>
+              <Shield className="h-5 w-5 sm:h-6 sm:w-6 text-orange-500" />
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Admin Panel</h1>
             </div>
           </div>
-          <p className="text-gray-600">
+          <p className="text-sm sm:text-base text-gray-600">
             Manage users, deals, and system settings.
           </p>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="flex gap-4 mb-8 border-b border-gray-200 overflow-x-auto">
+        {/* Navigation Tabs - Responsive: Dropdown on mobile, horizontal tabs on desktop */}
+        
+        {/* Mobile Dropdown (< md) */}
+        <div className="md:hidden mb-6">
+          <select
+            value={activeTab}
+            onChange={(e) => setActiveTab(e.target.value)}
+            className="w-full px-4 py-3 text-base font-medium border-2 border-gray-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 bg-white"
+          >
+            <option value="analytics">📊 Analytics</option>
+            <option value="users">👥 Users ({users.length})</option>
+            <option value="deals">📦 Deals ({deals.length})</option>
+            <option value="submit-deal">⬆️ Submit Deal</option>
+            <option value="deleted-deals">🗑️ Deleted Deals ({deletedDeals.length})</option>
+            <option value="url-shortener">🔗 URL Shortener</option>
+            <option value="ai-assistant">💬 AI Assistant</option>
+            <option value="affiliate">💰 Affiliate</option>
+            <option value="bulk-ops">☁️ Bulk Ops</option>
+            <option value="business-analytics">📈 Business</option>
+          </select>
+        </div>
+
+        {/* Desktop Horizontal Tabs (≥ md) */}
+        <div className="hidden md:flex gap-4 mb-8 border-b border-gray-200 flex-wrap">
           <button
             onClick={() => {
               console.log('Analytics tab clicked, setting activeTab to analytics');
@@ -955,26 +976,27 @@ const AdminPanel = () => {
                     <p className="text-gray-500">No deal performance data available</p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {analytics.dealPerformance.map((deal, index) => (
-                      <div key={deal.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                        <div className="flex items-center gap-4">
-                          <div className="flex-shrink-0 w-8 h-8 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center font-bold text-sm">
+                      <div key={deal.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border border-gray-200 rounded-lg gap-3">
+                        {/* Left section - Deal info */}
+                        <div className="flex items-start sm:items-center gap-3 sm:gap-4">
+                          <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm">
                             {index + 1}
                           </div>
                           <img
                             src={deal.image || '/default-deal.png'}
                             alt={deal.title}
-                            className="w-12 h-12 rounded-lg object-cover"
+                            className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg object-cover flex-shrink-0"
                           />
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium text-gray-900 truncate">{deal.title}</p>
-                            <p className="text-sm text-gray-500">{deal.store_name} • {deal.category_name}</p>
-                            <div className="flex items-center gap-4 mt-1">
-                              <span className="text-sm text-green-600 font-medium">
+                            <p className="font-medium text-gray-900 text-sm sm:text-base line-clamp-1">{deal.title}</p>
+                            <p className="text-xs sm:text-sm text-gray-500">{deal.store_name} • {deal.category_name}</p>
+                            <div className="flex items-center flex-wrap gap-2 mt-1">
+                              <span className="text-xs sm:text-sm text-green-600 font-medium">
                                 ${deal.price}
                               </span>
-                              <span className={`text-xs px-2 py-1 rounded-full ${
+                              <span className={`text-xs px-2 py-0.5 rounded-full ${
                                 deal.status === 'expired' ? 'bg-red-100 text-red-800' :
                                 deal.status === 'expiring_soon' ? 'bg-yellow-100 text-yellow-800' :
                                 'bg-green-100 text-green-800'
@@ -985,25 +1007,27 @@ const AdminPanel = () => {
                             </div>
                           </div>
                         </div>
-                        <div className="flex items-center gap-6 text-sm">
+                        
+                        {/* Right section - Stats */}
+                        <div className="grid grid-cols-4 gap-2 sm:flex sm:items-center sm:gap-4 lg:gap-6 text-xs sm:text-sm border-t sm:border-t-0 pt-3 sm:pt-0">
                           <div className="text-center">
                             <p className="font-medium text-gray-900">{deal.total_views || 0}</p>
-                            <p className="text-gray-500">Views</p>
+                            <p className="text-gray-500 text-xs">Views</p>
                           </div>
                           <div className="text-center">
                             <p className="font-medium text-gray-900">{deal.total_clicks || 0}</p>
-                            <p className="text-gray-500">Clicks</p>
+                            <p className="text-gray-500 text-xs">Clicks</p>
                           </div>
                           <div className="text-center">
                             <p className="font-medium text-gray-900">{deal.total_shares || 0}</p>
-                            <p className="text-gray-500">Shares</p>
+                            <p className="text-gray-500 text-xs">Shares</p>
                           </div>
                           <div className="text-center">
-                            <p className="font-medium text-gray-900 flex items-center gap-1">
+                            <p className="font-medium text-gray-900 flex items-center justify-center gap-1">
                               <Star className="h-3 w-3" />
                               {parseFloat(deal.avg_rating)?.toFixed(1) || '0.0'}
                             </p>
-                            <p className="text-gray-500">{deal.total_reviews || 0} reviews</p>
+                            <p className="text-gray-500 text-xs">{deal.total_reviews || 0} reviews</p>
                           </div>
                         </div>
                       </div>
@@ -1035,39 +1059,42 @@ const AdminPanel = () => {
                     <p className="text-gray-500">No user engagement data available</p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {analytics.userEngagement.slice(0, 10).map((user) => (
-                      <div key={user.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                        <div className="flex items-center gap-4">
+                      <div key={user.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border border-gray-200 rounded-lg gap-3">
+                        {/* Left section - User info */}
+                        <div className="flex items-center gap-3 sm:gap-4">
                           <img
                             src={user.photo_url || '/default-avatar.png'}
                             alt={user.display_name}
-                            className="w-10 h-10 rounded-full"
+                            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex-shrink-0"
                           />
-                          <div>
-                            <p className="font-medium text-gray-900">{user.display_name || 'No name'}</p>
-                            <p className="text-sm text-gray-500">{user.email}</p>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-gray-900 text-sm sm:text-base truncate">{user.display_name || 'No name'}</p>
+                            <p className="text-xs sm:text-sm text-gray-500 truncate">{user.email}</p>
                             <p className="text-xs text-gray-400">
                               Last active: {user.last_activity ? new Date(user.last_activity).toLocaleDateString() : 'Never'}
                             </p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-6 text-sm">
+                        
+                        {/* Right section - Stats */}
+                        <div className="grid grid-cols-4 gap-2 sm:flex sm:items-center sm:gap-4 lg:gap-6 text-xs sm:text-sm border-t sm:border-t-0 pt-3 sm:pt-0">
                           <div className="text-center">
                             <p className="font-medium text-gray-900">{user.total_views || 0}</p>
-                            <p className="text-gray-500">Views</p>
+                            <p className="text-gray-500 text-xs">Views</p>
                           </div>
                           <div className="text-center">
                             <p className="font-medium text-gray-900">{user.total_clicks || 0}</p>
-                            <p className="text-gray-500">Clicks</p>
+                            <p className="text-gray-500 text-xs">Clicks</p>
                           </div>
                           <div className="text-center">
                             <p className="font-medium text-gray-900">{user.total_favorites || 0}</p>
-                            <p className="text-gray-500">Favorites</p>
+                            <p className="text-gray-500 text-xs">Favorites</p>
                           </div>
                           <div className="text-center">
                             <p className="font-medium text-gray-900">{user.unique_deals_viewed || 0}</p>
-                            <p className="text-gray-500">Deals Viewed</p>
+                            <p className="text-gray-500 text-xs">Viewed</p>
                           </div>
                         </div>
                       </div>
@@ -1160,39 +1187,42 @@ const AdminPanel = () => {
                     <p className="text-gray-400 text-sm mt-2">You may not have permission to view users.</p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {users.map((user) => (
-                      <div key={user.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                        <div className="flex items-center gap-4">
+                      <div key={user.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border border-gray-200 rounded-lg gap-3">
+                        {/* User info */}
+                        <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
                           <img
                             src={user.photo_url || '/default-avatar.png'}
                             alt={user.display_name}
-                            className="w-10 h-10 rounded-full"
+                            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex-shrink-0"
                           />
-                          <div>
-                            <p className="font-medium text-gray-900">{user.display_name || 'No name'}</p>
-                            <p className="text-sm text-gray-500">{user.email}</p>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            {user.role === 'admin' ? (
-                              <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-orange-100 text-orange-800 rounded-full">
-                                <Crown className="h-3 w-3" />
-                                Admin
-                              </span>
-                            ) : (
-                              <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">
-                                <UserCheck className="h-3 w-3" />
-                                User
-                              </span>
-                            )}
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-gray-900 text-sm sm:text-base truncate">{user.display_name || 'No name'}</p>
+                            <p className="text-xs sm:text-sm text-gray-500 truncate">{user.email}</p>
+                            <div className="mt-1">
+                              {user.role === 'admin' ? (
+                                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-orange-100 text-orange-800 rounded-full">
+                                  <Crown className="h-3 w-3" />
+                                  Admin
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">
+                                  <UserCheck className="h-3 w-3" />
+                                  User
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2">
+                        
+                        {/* Controls */}
+                        <div className="flex items-center gap-2 border-t sm:border-t-0 pt-3 sm:pt-0">
                           <Select
                             value={user.role}
                             onValueChange={(value) => handleUserRoleUpdate(user.id, value)}
                           >
-                            <SelectTrigger className="w-32">
+                            <SelectTrigger className="w-full sm:w-32 min-h-[44px]">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -1205,7 +1235,7 @@ const AdminPanel = () => {
                               variant="outline"
                               size="sm"
                               onClick={() => handleDeleteUser(user.id)}
-                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50 min-w-[44px] min-h-[44px]"
                             >
                               <UserX className="h-4 w-4" />
                             </Button>
@@ -1252,40 +1282,46 @@ const AdminPanel = () => {
                     </button>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {deals.map((deal) => (
-                      <div key={deal.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                        <div className="flex items-center gap-4">
+                      <div key={deal.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border border-gray-200 rounded-lg gap-3">
+                        {/* Deal info */}
+                        <div className="flex items-start gap-3 sm:gap-4 flex-1 min-w-0">
                           <img
                             src={deal.image || '/default-deal.png'}
                             alt={deal.title}
-                            className="w-12 h-12 rounded-lg object-cover"
+                            className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover flex-shrink-0"
                           />
-                          <div>
-                            <p className="font-medium text-gray-900 line-clamp-1">{deal.title}</p>
-                            <p className="text-sm text-gray-500">{deal.store} • {deal.category}</p>
-                            <p className="text-sm font-medium text-green-600">
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-gray-900 text-sm sm:text-base line-clamp-2">{deal.title}</p>
+                            <p className="text-xs sm:text-sm text-gray-500 mt-1">{deal.store} • {deal.category}</p>
+                            <p className="text-sm font-medium text-green-600 mt-1">
                               ${deal.discounted_price} <span className="text-gray-400 line-through">${deal.original_price}</span>
                               <span className="text-orange-600 ml-2">({deal.discount}% off)</span>
                             </p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2">
+                        
+                        {/* Controls */}
+                        <div className="flex items-center gap-2 border-t sm:border-t-0 pt-3 sm:pt-0">
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => handleEditDeal(deal)}
+                            className="flex-1 sm:flex-none min-h-[44px] min-w-[44px]"
                           >
                             <Edit className="h-4 w-4" />
+                            <span className="ml-2 sm:hidden">Edit</span>
                           </Button>
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => handleDeleteDeal(deal.id)}
-                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50 flex-1 sm:flex-none min-h-[44px] min-w-[44px]"
                             title="Hide this deal from all users"
                           >
                             <Trash2 className="h-4 w-4" />
+                            <span className="ml-2 sm:hidden">Hide</span>
                           </Button>
                         </div>
                       </div>

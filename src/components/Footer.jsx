@@ -53,24 +53,29 @@ const Footer = () => {
             </div>
           </div>
 
-          <div>
-            <span className="font-semibold text-white mb-4 block">Quick Links</span>
-            <nav className="flex flex-col gap-2">
-              <a href="/" className="text-sm hover:text-white transition-colors">Browse Deals</a>
-              <a href="/#popular" className="text-sm hover:text-white transition-colors">Popular Stores</a>
-              <a href="/#categories" className="text-sm hover:text-white transition-colors">Categories</a>
-              <a href="/about" className="text-sm hover:text-white transition-colors">About Us</a>
-            </nav>
-          </div>
+          {/* Quick Links and Support - Side by side on mobile */}
+          <div className="md:col-span-2">
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-8 md:gap-8">
+              <div>
+                <span className="font-semibold text-white mb-4 block">Quick Links</span>
+                <nav className="flex flex-col gap-2">
+                  <a href="/" className="text-sm hover:text-white transition-colors">Browse Deals</a>
+                  <a href="/#popular" className="text-sm hover:text-white transition-colors">Popular Stores</a>
+                  <a href="/#categories" className="text-sm hover:text-white transition-colors">Categories</a>
+                  <a href="/about" className="text-sm hover:text-white transition-colors">About Us</a>
+                </nav>
+              </div>
 
-          <div>
-            <span className="font-semibold text-white mb-4 block">Support</span>
-            <nav className="flex flex-col gap-2">
-              <a href="/contact" className="text-sm hover:text-white transition-colors">Contact Us</a>
-              <a href="/contact#faq" className="text-sm hover:text-white transition-colors">FAQs</a>
-              <a href="/privacy-policy" className="text-sm hover:text-white transition-colors">Privacy Policy</a>
-              <a href="/terms-of-service" className="text-sm hover:text-white transition-colors">Terms of Service</a>
-            </nav>
+              <div>
+                <span className="font-semibold text-white mb-4 block">Support</span>
+                <nav className="flex flex-col gap-2">
+                  <a href="/contact" className="text-sm hover:text-white transition-colors">Contact Us</a>
+                  <a href="/contact#faq" className="text-sm hover:text-white transition-colors">FAQs</a>
+                  <a href="/privacy-policy" className="text-sm hover:text-white transition-colors">Privacy Policy</a>
+                  <a href="/terms-of-service" className="text-sm hover:text-white transition-colors">Terms of Service</a>
+                </nav>
+              </div>
+            </div>
           </div>
 
           <div>

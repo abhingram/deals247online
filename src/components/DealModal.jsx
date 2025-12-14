@@ -116,15 +116,15 @@ const DealModal = ({ deal, open, onOpenChange }) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md p-0 gap-0 overflow-hidden bg-white">
-        {/* Title Header - Compact */}
-        <div className="px-4 py-2 border-b border-gray-200 bg-white">
-          <h3 className="text-sm font-bold text-gray-900 leading-tight">
+      <DialogContent className="w-[95vw] sm:w-full max-w-sm sm:max-w-md p-0 gap-0 overflow-hidden bg-white rounded-lg sm:rounded-xl">
+        {/* Title Header - Responsive */}
+        <div className="px-3 sm:px-4 py-2 sm:py-3 border-b border-gray-200 bg-white">
+          <h3 className="text-xs sm:text-sm font-bold text-gray-900 leading-tight line-clamp-2">
             {deal.title}
           </h3>
         </div>
 
-        {/* Square Image Section */}
+        {/* Image Section - Responsive aspect ratio */}
         <div className="relative aspect-square w-full bg-white">
           <ImageWithFallback 
             src={deal.image || "https://images.unsplash.com/photo-1595872018818-97555653a011"}
@@ -133,77 +133,77 @@ const DealModal = ({ deal, open, onOpenChange }) => {
             fallbackClassName="bg-gray-200 text-gray-500"
           />
           {deal.discount && (
-            <div className="absolute top-3 right-3 bg-gradient-to-r from-red-500 to-pink-600 text-white px-2.5 py-1 rounded-full font-bold text-sm shadow-lg">
+            <div className="absolute top-2 sm:top-3 right-2 sm:right-3 bg-gradient-to-r from-red-500 to-pink-600 text-white px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full font-bold text-xs sm:text-sm shadow-lg">
               {deal.discount}% OFF
             </div>
           )}
         </div>
 
-        {/* Content Section - No Scroll */}
-        <div className="px-4 py-3 space-y-2.5 bg-white">
-          {/* Price Row */}
+        {/* Content Section - Responsive spacing */}
+        <div className="px-3 sm:px-4 py-3 sm:py-4 space-y-2 sm:space-y-2.5 bg-white">
+          {/* Price Row - Responsive sizing */}
           <div className="flex items-center justify-between">
-            <div className="text-2xl font-bold text-orange-600">
-              ₹{deal.discountedPrice}
+            <div className="text-xl sm:text-2xl font-bold text-orange-600">
+              ${deal.discountedPrice}
             </div>
             <div className="text-right">
-              <div className="text-xs text-gray-400 line-through">
-                ₹{deal.originalPrice}
+              <div className="text-xs sm:text-sm text-gray-400 line-through">
+                ${deal.originalPrice}
               </div>
-              <div className="text-xs text-green-600 font-semibold">
+              <div className="text-xs sm:text-sm text-green-600 font-semibold">
                 {deal.discount}% Off
               </div>
             </div>
           </div>
 
-          {/* Store Badge */}
-          <div className="flex items-center justify-between text-xs">
-            <span className="px-2 py-1 bg-orange-50 rounded-md font-semibold text-orange-600 border border-orange-100">
+          {/* Store Badge - Responsive */}
+          <div className="flex items-center justify-between text-xs sm:text-sm">
+            <span className="px-2 py-1 bg-orange-50 rounded-md font-semibold text-orange-600 border border-orange-100 truncate max-w-[60%]">
               {deal.store}
             </span>
-            {deal.expiresIn && (
-              <span className="text-gray-500">{deal.expiresIn}</span>
+            {deal.publishedAt && (
+              <span className="text-gray-500 text-xs">Published: {deal.publishedAt}</span>
             )}
           </div>
 
-          {/* Buy Button */}
+          {/* Buy Button - Touch-friendly */}
           <Button
             onClick={handleBuy}
-            className="w-full bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-600 hover:to-pink-700 text-white font-bold py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all text-sm"
+            className="w-full bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-600 hover:to-pink-700 text-white font-bold py-3 sm:py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all text-sm sm:text-base min-h-[44px]"
           >
             Buy Now @ {deal.store}
-            <ExternalLink className="ml-2 h-3.5 w-3.5" />
+            <ExternalLink className="ml-2 h-4 w-4" />
           </Button>
 
-          {/* Action Buttons */}
+          {/* Action Buttons - Touch-friendly grid */}
           <div className="grid grid-cols-3 gap-2 pt-1">
             <Button
               variant="outline"
               onClick={handleSave}
               disabled={loading}
-              className={`flex flex-col items-center gap-1 h-auto py-2 text-xs border transition-all ${
+              className={`flex flex-col items-center gap-1 h-auto py-2.5 sm:py-2 text-xs border transition-all min-h-[56px] sm:min-h-[48px] ${
                 isFavorited
                   ? 'border-red-300 bg-red-50 text-red-600 hover:bg-red-100'
                   : 'border-gray-200 hover:bg-orange-50 hover:border-orange-300'
               }`}
             >
-              <Heart className={`h-4 w-4 ${isFavorited ? 'fill-current text-red-500' : 'text-orange-500'}`} />
+              <Heart className={`h-5 w-5 sm:h-4 sm:w-4 ${isFavorited ? 'fill-current text-red-500' : 'text-orange-500'}`} />
               <span className="font-medium">Like</span>
             </Button>
             <Button
               variant="outline"
               onClick={handleCopyLink}
-              className="flex flex-col items-center gap-1 h-auto py-2 text-xs border border-gray-200 hover:bg-blue-50 hover:border-blue-300 transition-all"
+              className="flex flex-col items-center gap-1 h-auto py-2.5 sm:py-2 text-xs border border-gray-200 hover:bg-blue-50 hover:border-blue-300 transition-all min-h-[56px] sm:min-h-[48px]"
             >
-              <Copy className="h-4 w-4 text-blue-500" />
+              <Copy className="h-5 w-5 sm:h-4 sm:w-4 text-blue-500" />
               <span className="font-medium">Copy</span>
             </Button>
             <Button
               variant="outline"
               onClick={handleShare}
-              className="flex flex-col items-center gap-1 h-auto py-2 text-xs border border-gray-200 hover:bg-purple-50 hover:border-purple-300 transition-all"
+              className="flex flex-col items-center gap-1 h-auto py-2.5 sm:py-2 text-xs border border-gray-200 hover:bg-purple-50 hover:border-purple-300 transition-all min-h-[56px] sm:min-h-[48px]"
             >
-              <Share2 className="h-4 w-4 text-purple-500" />
+              <Share2 className="h-5 w-5 sm:h-4 sm:w-4 text-purple-500" />
               <span className="font-medium">Share</span>
             </Button>
           </div>

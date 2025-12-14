@@ -23,7 +23,7 @@ const DealCard = ({ deal }) => {
     rating,
     reviews,
     image,
-    expiresIn,
+    publishedAt,
     verified,
     id
   } = deal;
@@ -145,8 +145,8 @@ const DealCard = ({ deal }) => {
         className="deal-card bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all cursor-pointer group relative"
         onClick={handleCardClick}
       >
-        {/* Image Section */}
-        <div className="deal-image-container relative w-full h-48 bg-gray-100">
+        {/* Image Section - Responsive height */}
+        <div className="deal-image-container relative w-full h-40 sm:h-44 md:h-48 bg-gray-100">
           <ImageWithFallback 
             src={image || "https://images.unsplash.com/photo-1595872018818-97555653a011"}
             alt={title}
@@ -154,106 +154,106 @@ const DealCard = ({ deal }) => {
             fallbackClassName="bg-gray-200 text-gray-500"
           />
           
-          {/* Discount Badge */}
-          <div className="absolute top-3 left-3 bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1.5 rounded-full shadow-lg">
-            <span className="text-base font-bold">↓{discount}%</span>
+          {/* Discount Badge - Responsive sizing */}
+          <div className="absolute top-2 sm:top-3 left-2 sm:left-3 bg-gradient-to-r from-green-500 to-green-600 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-lg">
+            <span className="text-sm sm:text-base font-bold">↓{discount}%</span>
           </div>
 
-          {/* Action Buttons */}
-          <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          {/* Action Buttons - Touch-friendly on mobile, hover on desktop */}
+          <div className="absolute top-2 sm:top-3 right-2 sm:right-3 flex gap-1.5 sm:gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 handleSave();
               }}
               disabled={loading}
-              className={`p-2 rounded-full shadow-lg backdrop-blur-sm transition-all ${
+              className={`p-2 sm:p-2.5 rounded-full shadow-lg backdrop-blur-sm transition-all min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 flex items-center justify-center ${
                 isFavorited
                   ? 'bg-red-500 text-white hover:bg-red-600'
                   : 'bg-white/90 text-gray-700 hover:bg-white'
               }`}
               title={isFavorited ? "Remove from favorites" : "Add to favorites"}
             >
-              <Heart className={`h-4 w-4 ${isFavorited ? 'fill-current' : ''}`} />
+              <Heart className={`h-4 w-4 sm:h-5 sm:w-5 ${isFavorited ? 'fill-current' : ''}`} />
             </button>
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 handleShare();
               }}
-              className="bg-white/90 p-2 rounded-full shadow-lg hover:bg-white backdrop-blur-sm transition-all"
+              className="bg-white/90 p-2 sm:p-2.5 rounded-full shadow-lg hover:bg-white backdrop-blur-sm transition-all min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 flex items-center justify-center"
               title="Share this deal"
             >
-              <Share2 className="h-4 w-4 text-gray-700" />
+              <Share2 className="h-4 w-4 sm:h-5 sm:w-5 text-gray-700" />
             </button>
           </div>
 
-          {/* Trust Badge */}
+          {/* Trust Badge - Responsive sizing */}
           {verified && (
-            <div className="absolute bottom-3 left-3 flex items-center bg-green-500 text-white px-2.5 py-1 rounded-full shadow-md">
-              <CheckCircle className="h-3.5 w-3.5 mr-1" />
+            <div className="absolute bottom-2 sm:bottom-3 left-2 sm:left-3 flex items-center bg-green-500 text-white px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full shadow-md">
+              <CheckCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1" />
               <span className="text-xs font-semibold">Verified</span>
             </div>
           )}
         </div>
 
-        {/* Content Section */}
-        <div className="deal-content p-4">
-          {/* Title */}
-          <h3 className="deal-title text-base font-semibold text-gray-900 leading-snug mb-3 line-clamp-2 min-h-[3rem]">
+        {/* Content Section - Responsive padding */}
+        <div className="deal-content p-3 sm:p-4">
+          {/* Title - Responsive sizing */}
+          <h3 className="deal-title text-sm sm:text-base font-semibold text-gray-900 leading-snug mb-2 sm:mb-3 line-clamp-2 min-h-[2.5rem] sm:min-h-[3rem]">
             {title}
           </h3>
 
-          {/* Price Section */}
-          <div className="deal-prices mb-3 flex items-baseline gap-2">
-            <span className="price text-2xl font-bold text-gray-900">
+          {/* Price Section - Responsive sizing */}
+          <div className="deal-prices mb-2 sm:mb-3 flex items-baseline gap-2">
+            <span className="price text-xl sm:text-2xl font-bold text-gray-900">
               ${discountedPrice}
             </span>
-            <span className="old-price text-base text-gray-400 line-through">
+            <span className="old-price text-sm sm:text-base text-gray-400 line-through">
               ${originalPrice}
             </span>
           </div>
 
-          {/* Store and Rating */}
-          <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-100">
-            <div className="flex items-center gap-2">
-              <Award className="h-4 w-4 text-orange-500" />
-              <span className="text-sm font-medium text-gray-700">{store}</span>
+          {/* Store and Rating - Responsive */}
+          <div className="flex items-center justify-between mb-2 sm:mb-3 pb-2 sm:pb-3 border-b border-gray-100">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <Award className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-orange-500 flex-shrink-0" />
+              <span className="text-xs sm:text-sm font-medium text-gray-700 truncate">{store}</span>
             </div>
             
-            <div className="flex items-center gap-1">
-              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-              <span className="text-sm font-semibold text-gray-900">{rating}</span>
-              <span className="text-xs text-gray-500">({reviews.toLocaleString()})</span>
+            <div className="flex items-center gap-1 flex-shrink-0">
+              <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-yellow-400 text-yellow-400" />
+              <span className="text-xs sm:text-sm font-semibold text-gray-900">{rating}</span>
+              <span className="text-xs text-gray-500 hidden sm:inline">({reviews.toLocaleString()})</span>
             </div>
           </div>
 
-          {/* Trust Indicators Row */}
-          <div className="flex items-center gap-2 mb-3 flex-wrap">
+          {/* Trust Indicators Row - Responsive badges */}
+          <div className="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3 flex-wrap">
             {!verified && (
-              <div className="flex items-center bg-yellow-50 text-yellow-700 px-2 py-1 rounded-md">
-                <AlertTriangle className="h-3 w-3 mr-1" />
+              <div className="flex items-center bg-yellow-50 text-yellow-700 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md">
+                <AlertTriangle className="h-3 w-3 mr-0.5 sm:mr-1 flex-shrink-0" />
                 <span className="text-xs font-medium">Unverified</span>
               </div>
             )}
-            <div className="flex items-center bg-blue-50 text-blue-700 px-2 py-1 rounded-md">
-              <Shield className="h-3 w-3 mr-1" />
-              <span className="text-xs font-medium">98% Trust</span>
+            <div className="flex items-center bg-blue-50 text-blue-700 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md">
+              <Shield className="h-3 w-3 mr-0.5 sm:mr-1 flex-shrink-0" />
+              <span className="text-xs font-medium">98%</span>
             </div>
-            <div className="flex items-center bg-green-50 text-green-700 px-2 py-1 rounded-md">
-              <ThumbsUp className="h-3 w-3 mr-1" />
+            <div className="flex items-center bg-green-50 text-green-700 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md">
+              <ThumbsUp className="h-3 w-3 mr-0.5 sm:mr-1 flex-shrink-0" />
               <span className="text-xs font-medium">95%</span>
             </div>
           </div>
 
-          {/* Footer */}
+          {/* Footer - Responsive */}
           <div className="flex items-center justify-between text-xs text-gray-500">
             <div className="flex items-center gap-1">
-              <Clock className="h-3.5 w-3.5" />
-              <span className="font-medium">Expires: {expiresIn}</span>
+              <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0" />
+              <span className="font-medium truncate">Published: {publishedAt}</span>
             </div>
-            <div className="flex items-center gap-1 text-blue-600">
-              <ExternalLink className="h-3.5 w-3.5" />
+            <div className="flex items-center gap-1 text-blue-600 flex-shrink-0">
+              <ExternalLink className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
               <span className="font-medium">Active</span>
             </div>
           </div>

@@ -49,29 +49,29 @@ export default function AboutUs() {
       <Header />
       <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
       {/* Hero Section */}
-      <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+      <section className="relative py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="max-w-4xl mx-auto text-center"
         >
-          <h1 className="text-5xl font-bold mb-6">About Deals247</h1>
-          <p className="text-xl text-purple-100 mb-8">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 leading-tight">About Deals247</h1>
+          <p className="text-base sm:text-lg md:text-xl text-purple-100 mb-6 sm:mb-8 leading-relaxed px-4">
             Your 24/7 companion for discovering the best deals, discounts, and savings opportunities across the web
           </p>
-          <div className="flex justify-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold hover:bg-purple-50 transition"
+              className="bg-white text-purple-600 px-6 sm:px-8 py-3 rounded-lg font-semibold hover:bg-purple-50 transition min-h-[44px] text-sm sm:text-base"
             >
               Explore Deals
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition"
+              className="border-2 border-white text-white px-6 sm:px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition min-h-[44px] text-sm sm:text-base"
             >
               Contact Us
             </motion.button>
@@ -80,9 +80,9 @@ export default function AboutUs() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-12 bg-white">
+      <section className="py-8 sm:py-12 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             {stats.map((stat, index) => (
               <motion.div
                 key={index}
@@ -92,8 +92,8 @@ export default function AboutUs() {
                 viewport={{ once: true }}
                 className="text-center"
               >
-                <div className="text-4xl font-bold text-purple-600 mb-2">{stat.value}</div>
-                <div className="text-gray-600">{stat.label}</div>
+                <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-purple-600 mb-1 sm:mb-2">{stat.value}</div>
+                <div className="text-gray-600 text-xs sm:text-sm md:text-base">{stat.label}</div>
               </motion.div>
             ))}
           </div>
@@ -101,7 +101,7 @@ export default function AboutUs() {
       </section>
 
       {/* Story Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
+      <section className="py-10 sm:py-12 md:py-16 px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -109,8 +109,8 @@ export default function AboutUs() {
           viewport={{ once: true }}
           className="max-w-4xl mx-auto"
         >
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">Our Story</h2>
-          <div className="bg-white rounded-lg shadow-lg p-8 space-y-4 text-gray-700">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 text-center leading-tight">Our Story</h2>
+          <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 md:p-8 space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base leading-relaxed">
             <p>
               Deals247 was born from a simple idea: everyone deserves access to the best deals and savings, anytime, anywhere. We noticed that finding genuine, valuable deals online was becoming increasingly time-consuming and frustrating, with deals scattered across countless websites and platforms.
             </p>
@@ -128,17 +128,17 @@ export default function AboutUs() {
       </section>
 
       {/* Values Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-purple-50">
+      <section className="py-10 sm:py-12 md:py-16 px-4 sm:px-6 lg:px-8 bg-purple-50">
         <div className="max-w-6xl mx-auto">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl font-bold text-gray-900 mb-12 text-center"
+            className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8 sm:mb-12 text-center leading-tight"
           >
             Our Values & Principles
           </motion.h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {values.map((value, index) => (
               <motion.div
                 key={index}
@@ -146,15 +146,15 @@ export default function AboutUs() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition"
+                className="bg-white rounded-lg shadow-lg p-4 sm:p-6 hover:shadow-xl transition"
               >
-                <div className="flex items-center mb-4">
-                  <div className="bg-purple-100 p-3 rounded-lg">
-                    <value.icon className="w-6 h-6 text-purple-600" />
+                <div className="flex items-center mb-3 sm:mb-4">
+                  <div className="bg-purple-100 p-2 sm:p-3 rounded-lg">
+                    <value.icon className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
                   </div>
-                  <h3 className="ml-3 text-xl font-semibold text-gray-900">{value.title}</h3>
+                  <h3 className="ml-3 text-base sm:text-lg md:text-xl font-semibold text-gray-900">{value.title}</h3>
                 </div>
-                <p className="text-gray-600">{value.description}</p>
+                <p className="text-gray-600 text-sm sm:text-base leading-relaxed">{value.description}</p>
               </motion.div>
             ))}
           </div>
@@ -162,29 +162,29 @@ export default function AboutUs() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
+      <section className="py-10 sm:py-12 md:py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl font-bold text-gray-900 mb-12 text-center"
+            className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8 sm:mb-12 text-center leading-tight"
           >
             How Deals247 Works
           </motion.h2>
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="flex items-start gap-4"
+              className="flex items-start gap-3 sm:gap-4"
             >
-              <div className="bg-purple-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold flex-shrink-0">
+              <div className="bg-purple-600 text-white rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center font-bold flex-shrink-0 text-sm sm:text-base">
                 1
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Discover Deals</h3>
-                <p className="text-gray-600">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1 sm:mb-2 leading-tight">Discover Deals</h3>
+                <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
                   Browse thousands of verified deals across multiple categories. Use our advanced filters to find exactly what you're looking for.
                 </p>
               </div>

@@ -290,45 +290,45 @@ What would you like to focus on?`;
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Bot className="h-5 w-5" />
+        <CardHeader className="p-4 sm:p-6">
+          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+            <Bot className="h-5 w-5 sm:h-6 sm:w-6" />
             AI Admin Assistant
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-sm sm:text-base mt-1">
             Your intelligent assistant for admin tasks, analytics, and insights
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-3 sm:p-4 md:p-6">
           {/* Chat Interface */}
-          <div className="flex flex-col h-96 border rounded-lg">
+          <div className="flex flex-col h-[400px] sm:h-96 border rounded-lg">
             {/* Messages */}
-            <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
-              <div className="space-y-4">
+            <ScrollArea className="flex-1 p-3 sm:p-4" ref={scrollAreaRef}>
+              <div className="space-y-3 sm:space-y-4">
                 {messages.map((message) => (
                   <div
                     key={message.id}
-                    className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    className={`flex gap-2 sm:gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     {message.role === 'assistant' && (
                       <div className="flex-shrink-0">
-                        <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                          <Bot className="h-4 w-4 text-white" />
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                          <Bot className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
                         </div>
                       </div>
                     )}
                     
                     <div
-                      className={`max-w-[80%] rounded-lg px-4 py-2 ${
+                      className={`max-w-[85%] sm:max-w-[80%] rounded-lg px-3 py-2 sm:px-4 ${
                         message.role === 'user'
                           ? 'bg-gradient-to-r from-orange-500 to-pink-600 text-white'
                           : 'bg-gray-100 text-gray-900'
                       }`}
                     >
-                      <div className="whitespace-pre-wrap text-sm">
+                      <div className="whitespace-pre-wrap text-xs sm:text-sm leading-relaxed">
                         {message.content}
                       </div>
-                      <div className={`text-xs mt-1 ${
+                      <div className={`text-[10px] sm:text-xs mt-1 ${
                         message.role === 'user' ? 'text-orange-100' : 'text-gray-500'
                       }`}>
                         {message.timestamp.toLocaleTimeString()}
@@ -337,8 +337,8 @@ What would you like to focus on?`;
                     
                     {message.role === 'user' && (
                       <div className="flex-shrink-0">
-                        <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-pink-600 rounded-full flex items-center justify-center">
-                          <User className="h-4 w-4 text-white" />
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-orange-500 to-pink-600 rounded-full flex items-center justify-center">
+                          <User className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
                         </div>
                       </div>
                     )}
@@ -346,16 +346,16 @@ What would you like to focus on?`;
                 ))}
                 
                 {isLoading && (
-                  <div className="flex gap-3 justify-start">
+                  <div className="flex gap-2 sm:gap-3 justify-start">
                     <div className="flex-shrink-0">
-                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                        <Bot className="h-4 w-4 text-white" />
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <Bot className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
                       </div>
                     </div>
-                    <div className="bg-gray-100 rounded-lg px-4 py-2">
+                    <div className="bg-gray-100 rounded-lg px-3 py-2 sm:px-4">
                       <div className="flex items-center gap-2">
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span className="text-sm text-gray-600">Thinking...</span>
+                        <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin" />
+                        <span className="text-xs sm:text-sm text-gray-600">Thinking...</span>
                       </div>
                     </div>
                   </div>
@@ -364,21 +364,21 @@ What would you like to focus on?`;
             </ScrollArea>
 
             {/* Input */}
-            <div className="border-t p-4">
+            <div className="border-t p-3 sm:p-4">
               <div className="flex gap-2">
                 <Input
                   ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Ask me anything about your admin panel..."
-                  className="flex-1"
+                  placeholder="Ask me anything..."
+                  className="flex-1 min-h-[44px] text-sm sm:text-base"
                   disabled={isLoading}
                 />
                 <Button
                   onClick={handleSendMessage}
                   disabled={!input.trim() || isLoading}
-                  className="bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-600 hover:to-pink-700"
+                  className="bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-600 hover:to-pink-700 min-w-[44px] min-h-[44px] px-3 sm:px-4"
                 >
                   {isLoading ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -391,18 +391,18 @@ What would you like to focus on?`;
           </div>
 
           {/* Quick Suggestions */}
-          <div className="mt-4">
-            <h4 className="text-sm font-medium text-gray-700 mb-2">Quick Suggestions:</h4>
+          <div className="mt-3 sm:mt-4">
+            <h4 className="text-xs sm:text-sm font-medium text-gray-700 mb-2">Quick Suggestions:</h4>
             <div className="flex flex-wrap gap-2">
               {suggestions.map((suggestion, index) => (
                 <Badge
                   key={index}
                   variant="outline"
-                  className="cursor-pointer hover:bg-orange-50 hover:border-orange-300 transition-colors"
+                  className="cursor-pointer hover:bg-orange-50 hover:border-orange-300 transition-colors min-h-[32px] px-3 py-1.5 text-xs sm:text-sm"
                   onClick={() => handleSuggestionClick(suggestion)}
                 >
-                  <Sparkles className="h-3 w-3 mr-1" />
-                  {suggestion}
+                  <Sparkles className="h-3 w-3 mr-1 flex-shrink-0" />
+                  <span className="line-clamp-1">{suggestion}</span>
                 </Badge>
               ))}
             </div>
@@ -411,44 +411,44 @@ What would you like to focus on?`;
       </Card>
 
       {/* AI Features Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <BarChart3 className="h-5 w-5 text-blue-600" />
+          <CardContent className="pt-4 sm:pt-6 p-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="p-2 bg-blue-100 rounded-lg flex-shrink-0">
+                <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
               </div>
               <div>
-                <h3 className="font-medium text-gray-900">Analytics & Insights</h3>
-                <p className="text-sm text-gray-600">Smart data analysis and recommendations</p>
+                <h3 className="font-medium text-sm sm:text-base text-gray-900">Analytics & Insights</h3>
+                <p className="text-xs sm:text-sm text-gray-600">Smart data analysis and recommendations</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <Lightbulb className="h-5 w-5 text-green-600" />
+          <CardContent className="pt-4 sm:pt-6 p-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="p-2 bg-green-100 rounded-lg flex-shrink-0">
+                <Lightbulb className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
               </div>
               <div>
-                <h3 className="font-medium text-gray-900">Content Generation</h3>
-                <p className="text-sm text-gray-600">AI-powered deal descriptions and marketing</p>
+                <h3 className="font-medium text-sm sm:text-base text-gray-900">Content Generation</h3>
+                <p className="text-xs sm:text-sm text-gray-600">AI-powered deal descriptions and marketing</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <TrendingUp className="h-5 w-5 text-purple-600" />
+          <CardContent className="pt-4 sm:pt-6 p-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="p-2 bg-purple-100 rounded-lg flex-shrink-0">
+                <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
               </div>
               <div>
-                <h3 className="font-medium text-gray-900">Smart Recommendations</h3>
-                <p className="text-sm text-gray-600">Data-driven suggestions for optimization</p>
+                <h3 className="font-medium text-sm sm:text-base text-gray-900">Smart Recommendations</h3>
+                <p className="text-xs sm:text-sm text-gray-600">Data-driven suggestions for optimization</p>
               </div>
             </div>
           </CardContent>

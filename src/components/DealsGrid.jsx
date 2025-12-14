@@ -7,6 +7,7 @@ import { SlidersHorizontal, List, Grid3X3, Star, Clock, CheckCircle, AlertTriang
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
 import { toast } from '@/components/ui/use-toast';
+import { getTimeSincePublished } from '@/lib/utils';
 
 const DealsGrid = ({ searchQuery, selectedCategory, filterType }) => {
   const [showFilters, setShowFilters] = useState(false);
@@ -113,7 +114,7 @@ const DealsGrid = ({ searchQuery, selectedCategory, filterType }) => {
         reviews: deal.reviews,
         image: deal.image,
         category: deal.category,
-        expiresIn: calculateExpiresIn(deal.expires_at),
+        publishedAt: getTimeSincePublished(deal.created_at || new Date()),
         verified: Boolean(deal.verified),
       }));
       
@@ -131,18 +132,6 @@ const DealsGrid = ({ searchQuery, selectedCategory, filterType }) => {
     }
   };
 
-  const calculateExpiresIn = (expiresAt) => {
-    const now = new Date();
-    const expiry = new Date(expiresAt);
-    const diffTime = expiry - now;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays < 0) return 'Expired';
-    if (diffDays === 0) return 'Today';
-    if (diffDays === 1) return '1 day';
-    return `${diffDays} days`;
-  };
-
   const loadMore = () => {
     setOffset(prev => prev + limit);
   };
@@ -153,7 +142,7 @@ const DealsGrid = ({ searchQuery, selectedCategory, filterType }) => {
   };
 
   const renderDealListView = () => (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
       {deals.map((deal, index) => (
         <motion.div
           key={deal.id}
@@ -163,57 +152,59 @@ const DealsGrid = ({ searchQuery, selectedCategory, filterType }) => {
           className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
           onClick={() => handleDealClick(deal)}
         >
-          <div className="p-4">
+          <div className="p-3 sm:p-4">
             {/* Row 1: Deal Title - Full Width */}
-            <h3 className="font-medium text-gray-900 text-sm line-clamp-2 mb-3">{deal.title}</h3>
+            <h3 className="font-medium text-gray-900 text-sm sm:text-base line-clamp-2 mb-3">{deal.title}</h3>
 
             {/* Content Section */}
-            <div className="flex gap-4">
+            <div className="flex gap-3 sm:gap-4">
               {/* Left Column: Product Info */}
-              <div className="flex-1 flex flex-col justify-end">
+              <div className="flex-1 flex flex-col justify-end min-w-0">
                 {/* Row 2: Discount, Prices, Store - Equal width items */}
-                <div className="grid grid-cols-4 gap-2 mb-2 text-sm">
-                  <div className="flex items-center justify-center bg-green-100 text-green-700 px-2 py-1 rounded-md">
-                    <span>↓{deal.discount}%</span>
+                <div className="grid grid-cols-4 gap-1.5 sm:gap-2 mb-2 text-xs sm:text-sm">
+                  <div className="flex items-center justify-center bg-green-100 text-green-700 px-1.5 sm:px-2 py-1 rounded-md">
+                    <span className="truncate">↓{deal.discount}%</span>
                   </div>
-                  <div className="flex items-center justify-center font-bold text-gray-900">
+                  <div className="flex items-center justify-center font-bold text-gray-900 truncate">
                     ${deal.discountedPrice}
                   </div>
-                  <div className="flex items-center justify-center text-gray-400 line-through">
+                  <div className="flex items-center justify-center text-gray-400 line-through truncate">
                     ${deal.originalPrice}
                   </div>
-                  <div className="flex items-center justify-center bg-orange-50 text-orange-700 px-2 py-1 rounded-md">
-                    {deal.store}
+                  <div className="flex items-center justify-center bg-orange-50 text-orange-700 px-1.5 sm:px-2 py-1 rounded-md">
+                    <span className="truncate text-xs">{deal.store}</span>
                   </div>
                 </div>
 
                 {/* Row 3: Rating, Verified, Clicks, Expiration - Equal width items */}
-                <div className="grid grid-cols-4 gap-2 text-sm">
-                  <div className="flex items-center justify-center bg-yellow-50 text-yellow-700 px-2 py-1 rounded-md">
-                    <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400 mr-1" />
-                    <span>{deal.rating}</span>
+                <div className="grid grid-cols-4 gap-1.5 sm:gap-2 text-xs sm:text-sm">
+                  <div className="flex items-center justify-center bg-yellow-50 text-yellow-700 px-1.5 sm:px-2 py-1 rounded-md">
+                    <Star className="h-3 w-3 sm:h-3.5 sm:w-3.5 fill-yellow-400 text-yellow-400 mr-0.5 sm:mr-1 flex-shrink-0" />
+                    <span className="truncate">{deal.rating}</span>
                   </div>
                   
                   {deal.verified ? (
-                    <div className="flex items-center justify-center bg-green-50 text-green-700 px-2 py-1 rounded-md">
-                      <CheckCircle className="h-3.5 w-3.5 mr-1" />
-                      <span className="text-xs">Verified</span>
+                    <div className="flex items-center justify-center bg-green-50 text-green-700 px-1.5 sm:px-2 py-1 rounded-md">
+                      <CheckCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-0.5 sm:mr-1 flex-shrink-0" />
+                      <span className="text-xs truncate hidden sm:inline">Verified</span>
+                      <span className="text-xs truncate sm:hidden">✓</span>
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center bg-yellow-50 text-yellow-600 px-2 py-1 rounded-md">
-                      <AlertTriangle className="h-3.5 w-3.5 mr-1" />
-                      <span className="text-xs">Unverified</span>
+                    <div className="flex items-center justify-center bg-yellow-50 text-yellow-600 px-1.5 sm:px-2 py-1 rounded-md">
+                      <AlertTriangle className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-0.5 sm:mr-1 flex-shrink-0" />
+                      <span className="text-xs truncate hidden sm:inline">Unverified</span>
+                      <span className="text-xs truncate sm:hidden">⚠</span>
                     </div>
                   )}
 
-                  <div className="flex items-center justify-center bg-blue-50 text-blue-700 px-2 py-1 rounded-md">
-                    <Shield className="h-3.5 w-3.5 mr-1" />
-                    <span>{deal.total_clicks || 55}</span>
+                  <div className="flex items-center justify-center bg-blue-50 text-blue-700 px-1.5 sm:px-2 py-1 rounded-md">
+                    <Shield className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-0.5 sm:mr-1 flex-shrink-0" />
+                    <span className="truncate">{deal.total_clicks || 55}</span>
                   </div>
 
-                  <div className="flex items-center justify-center bg-red-50 text-red-700 px-2 py-1 rounded-md">
-                    <Clock className="h-3.5 w-3.5 mr-1" />
-                    <span className="text-xs">{deal.expiresIn}</span>
+                  <div className="flex items-center justify-center bg-red-50 text-red-700 px-1.5 sm:px-2 py-1 rounded-md">
+                    <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-0.5 sm:mr-1 flex-shrink-0" />
+                    <span className="text-xs truncate">{deal.publishedAt}</span>
                   </div>
                 </div>
               </div>
@@ -223,7 +214,7 @@ const DealsGrid = ({ searchQuery, selectedCategory, filterType }) => {
                 <img
                   src={deal.image || "https://images.unsplash.com/photo-1595872018818-97555653a011"}
                   alt={deal.title}
-                  className="w-28 h-24 object-cover rounded-lg shadow-sm"
+                  className="w-20 h-16 sm:w-28 sm:h-24 object-cover rounded-lg shadow-sm"
                 />
               </div>
             </div>
@@ -234,45 +225,45 @@ const DealsGrid = ({ searchQuery, selectedCategory, filterType }) => {
   );
 
   return (
-    <section className="bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">
+    <section className="bg-gray-50 py-4 sm:py-6 md:py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
             {filterType === 'hot' ? '🔥 Hot Deals' :
              filterType === 'popular' ? '⭐ Popular Deals' :
              filterType === 'talking' ? '💬 Talking Deals' :
              '🆕 New Deals'}
           </h2>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4 w-full sm:w-auto">
             {/* View Toggle */}
             <div className="flex items-center bg-white border border-gray-200 rounded-lg p-1">
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-2 rounded-md transition-colors ${
+                className={`p-2 rounded-md transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center ${
                   viewMode === 'list'
                     ? 'bg-orange-100 text-orange-600'
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
                 title="List view"
               >
-                <List className="h-4 w-4" />
+                <List className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
               <button
                 onClick={() => setViewMode('card')}
-                className={`p-2 rounded-md transition-colors ${
+                className={`p-2 rounded-md transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center ${
                   viewMode === 'card'
                     ? 'bg-orange-100 text-orange-600'
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
                 title="Card view"
               >
-                <Grid3X3 className="h-4 w-4" />
+                <Grid3X3 className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
             </div>
             <Button
               variant="outline"
               onClick={() => setShowFilters(!showFilters)}
-              className="md:hidden"
+              className="lg:hidden min-h-[44px] flex-1 sm:flex-initial"
             >
               <SlidersHorizontal className="h-4 w-4 mr-2" />
               Filters
@@ -280,7 +271,7 @@ const DealsGrid = ({ searchQuery, selectedCategory, filterType }) => {
           </div>
         </div>
 
-        <div className="flex gap-6">
+        <div className="flex gap-4 sm:gap-6">
           <FilterSidebar 
             show={showFilters} 
             onClose={() => setShowFilters(false)}
@@ -290,8 +281,8 @@ const DealsGrid = ({ searchQuery, selectedCategory, filterType }) => {
           <div className="flex-1 min-w-0">
             {loading && deals.length === 0 ? (
               viewMode === 'card' ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                  {[...Array(6)].map((_, i) => (
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+                  {[...Array(8)].map((_, i) => (
                     <div key={i} className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm animate-pulse flex">
                       <div className="flex-1 pr-3">
                         <div className="h-4 bg-gray-200 rounded w-full mb-1"></div>
@@ -315,25 +306,25 @@ const DealsGrid = ({ searchQuery, selectedCategory, filterType }) => {
                   ))}
                 </div>
               ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
                   {[...Array(6)].map((_, i) => (
                     <div key={i} className="bg-white border border-gray-200 rounded-lg shadow-sm animate-pulse">
-                      <div className="p-4">
+                      <div className="p-3 sm:p-4">
                         {/* Title skeleton */}
                         <div className="h-3.5 bg-gray-200 rounded w-3/4 mb-3"></div>
                         
                         {/* Content skeleton */}
-                        <div className="flex gap-4">
+                        <div className="flex gap-3 sm:gap-4">
                           <div className="flex-1 space-y-2.5">
                             {/* Row 2 skeleton */}
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1.5 sm:gap-2">
                               <div className="h-6 w-12 bg-gray-200 rounded-md"></div>
                               <div className="h-6 w-16 bg-gray-200 rounded"></div>
                               <div className="h-5 w-14 bg-gray-200 rounded"></div>
                               <div className="h-5 w-16 bg-gray-200 rounded-md ml-auto"></div>
                             </div>
                             {/* Row 3 skeleton */}
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1.5 sm:gap-2">
                               <div className="h-6 w-14 bg-gray-200 rounded-md"></div>
                               <div className="h-6 w-16 bg-gray-200 rounded-md"></div>
                               <div className="h-6 w-12 bg-gray-200 rounded-md"></div>
@@ -341,7 +332,7 @@ const DealsGrid = ({ searchQuery, selectedCategory, filterType }) => {
                             </div>
                           </div>
                           {/* Image skeleton */}
-                          <div className="w-28 h-24 bg-gray-200 rounded-lg flex-shrink-0"></div>
+                          <div className="w-20 h-16 sm:w-28 sm:h-24 bg-gray-200 rounded-lg flex-shrink-0"></div>
                         </div>
                       </div>
                     </div>
@@ -350,12 +341,12 @@ const DealsGrid = ({ searchQuery, selectedCategory, filterType }) => {
               )
             ) : deals.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-gray-500 text-lg">No deals found</p>
+                <p className="text-gray-500 text-base sm:text-lg">No deals found</p>
               </div>
             ) : (
               <>
                 {viewMode === 'card' ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
                     {deals.map((deal, index) => (
                       <motion.div
                         key={deal.id}
@@ -372,13 +363,13 @@ const DealsGrid = ({ searchQuery, selectedCategory, filterType }) => {
                 )}
 
                 {deals.length < total && (
-                  <div className="mt-12 flex justify-center">
+                  <div className="mt-8 sm:mt-12 flex justify-center">
                     <Button
                       variant="outline"
                       size="lg"
                       onClick={loadMore}
                       disabled={loading}
-                      className="hover:bg-orange-50 hover:text-orange-600 hover:border-orange-300"
+                      className="hover:bg-orange-50 hover:text-orange-600 hover:border-orange-300 min-h-[44px] px-6 sm:px-8"
                     >
                       {loading ? 'Loading...' : 'Load More Deals'}
                     </Button>

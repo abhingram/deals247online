@@ -5,6 +5,7 @@ import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
 import { Slider } from './ui/slider';
 import { useToast } from './ui/use-toast';
+import { getTimeSincePublished } from '../lib/utils';
 
 const AdvancedSearch = ({ onSearch, initialFilters = {} }) => {
   const { toast } = useToast();
@@ -80,11 +81,18 @@ const AdvancedSearch = ({ onSearch, initialFilters = {} }) => {
       };
 
       const results = await api.getDeals(searchParams);
-      onSearch(results, filters);
+      
+      // Transform results to include publishedAt
+      const transformedResults = (results.deals || results).map(deal => ({
+        ...deal,
+        publishedAt: getTimeSincePublished(deal.created_at || new Date())
+      }));
+      
+      onSearch(transformedResults, filters);
 
       toast({
         title: "Search completed",
-        description: `Found ${results.length} deals matching your criteria.`,
+        description: `Found ${transformedResults.length} deals matching your criteria.`,
       });
     } catch (error) {
       console.error('Search failed:', error);

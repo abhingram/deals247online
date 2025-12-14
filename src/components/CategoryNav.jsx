@@ -37,12 +37,12 @@ const CategoryNav = ({ onCategoryChange, selectedCategory: externalCategory }) =
 
   return (
     <section className="bg-white border-b border-gray-200 sticky top-16 z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-2 py-4 overflow-x-auto scrollbar-hide">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+        <div className="flex items-center gap-2 py-3 sm:py-4 overflow-x-auto scrollbar-hide">
           <Button
             variant="ghost"
             size="icon"
-            className="shrink-0 hidden md:flex"
+            className="shrink-0 hidden md:flex min-w-[44px] min-h-[44px]"
           >
             <ChevronLeft className="h-5 w-5" />
           </Button>
@@ -61,13 +61,13 @@ const CategoryNav = ({ onCategoryChange, selectedCategory: externalCategory }) =
                       onCategoryChange(category.id);
                     }
                   }}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium whitespace-nowrap transition-colors ${
+                  className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 sm:py-2 rounded-full font-medium whitespace-nowrap transition-colors min-h-[44px] text-xs sm:text-sm md:text-base ${
                     selectedCategory === category.id
                       ? 'bg-gradient-to-r from-orange-500 to-pink-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
-                  {Icon && <Icon className="h-4 w-4" />}
+                  {Icon && <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />}
                   <span>{category.name}</span>
                 </motion.button>
               );
@@ -77,7 +77,7 @@ const CategoryNav = ({ onCategoryChange, selectedCategory: externalCategory }) =
           <Button
             variant="ghost"
             size="icon"
-            className="shrink-0 hidden md:flex"
+            className="shrink-0 hidden md:flex min-w-[44px] min-h-[44px]"
           >
             <ChevronRight className="h-5 w-5" />
           </Button>

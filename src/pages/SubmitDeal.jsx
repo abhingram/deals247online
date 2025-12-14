@@ -23,7 +23,6 @@ const SubmitDeal = () => {
     discount: '',
     category: '',
     image: '',
-    expires_at: '',
     verified: false
   });
 
@@ -154,7 +153,8 @@ const SubmitDeal = () => {
         discount: parseInt(formData.discount) || 0,
         rating: 0,
         reviews: 0,
-        verified: false // New deals start as unverified
+        verified: false, // New deals start as unverified
+        created_at: new Date().toISOString() // Automatically track publish time
       };
 
       await api.createDeal(dealData);
@@ -173,7 +173,6 @@ const SubmitDeal = () => {
         discount: '',
         category: '',
         image: '',
-        expires_at: '',
         verified: false
       });
 
@@ -199,28 +198,29 @@ const SubmitDeal = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-6">
+    <div className="min-h-screen bg-gray-50 py-4 sm:py-6 md:py-8">
+      <div className="max-w-2xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+        <div className="mb-4 sm:mb-6">
           <Button
             variant="ghost"
             onClick={() => navigate('/')}
-            className="mb-4"
+            className="mb-3 sm:mb-4 min-h-[44px]"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Deals
+            <span className="hidden sm:inline">Back to Deals</span>
+            <span className="sm:hidden">Back</span>
           </Button>
 
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Submit a Deal</h1>
-          <p className="text-gray-600">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Submit a Deal</h1>
+          <p className="text-sm sm:text-base text-gray-600">
             Share amazing deals you've found. All submissions are reviewed before being published.
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Deal Information</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-lg sm:text-xl">Deal Information</CardTitle>
+            <CardDescription className="text-sm">
               Fill in the details about the deal you want to share.
             </CardDescription>
             {/* Debug info */}
@@ -230,10 +230,10 @@ const SubmitDeal = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="md:col-span-2">
-                  <Label htmlFor="title">Deal Title *</Label>
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                <div className="sm:col-span-2">
+                  <Label htmlFor="title" className="text-sm sm:text-base">Deal Title *</Label>
                   <Input
                     id="title"
                     name="title"
@@ -241,18 +241,19 @@ const SubmitDeal = () => {
                     placeholder="e.g., Apple iPhone 15 Pro Max - 256GB"
                     value={formData.title}
                     onChange={handleInputChange}
+                    className="min-h-[44px] text-base"
                     required
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="store">Store *</Label>
+                  <Label htmlFor="store" className="text-sm sm:text-base">Store *</Label>
                   <select
                     id="store"
                     name="store"
                     value={formData.store}
                     onChange={handleInputChange}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     required
                     disabled={stores.length === 0}
                   >
@@ -271,13 +272,13 @@ const SubmitDeal = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="category">Category *</Label>
+                  <Label htmlFor="category" className="text-sm sm:text-base">Category *</Label>
                   <select
                     id="category"
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     required
                     disabled={categories.length === 0}
                   >
@@ -341,17 +342,6 @@ const SubmitDeal = () => {
                   <p className="text-xs text-gray-500 mt-1">
                     Automatically calculated from prices
                   </p>
-                </div>
-
-                <div>
-                  <Label htmlFor="expires_at">Expiration Date (Optional)</Label>
-                  <Input
-                    id="expires_at"
-                    name="expires_at"
-                    type="datetime-local"
-                    value={formData.expires_at}
-                    onChange={handleInputChange}
-                  />
                 </div>
 
                 <div className="md:col-span-2">

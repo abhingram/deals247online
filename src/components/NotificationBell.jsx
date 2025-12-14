@@ -65,7 +65,7 @@ export const NotificationBell = () => {
       <Button
         variant="ghost"
         size="sm"
-        className="relative"
+        className="relative min-w-[44px] min-h-[44px]"
         onClick={() => setIsOpen(!isOpen)}
       >
         <Bell className="h-5 w-5" />
@@ -80,25 +80,26 @@ export const NotificationBell = () => {
       </Button>
 
       {isOpen && (
-        <Card className="absolute right-0 top-12 w-96 max-h-96 z-50 shadow-lg bg-white">
+        <Card className="absolute right-0 top-12 w-screen max-w-[calc(100vw-2rem)] sm:w-96 max-h-[80vh] sm:max-h-96 z-50 shadow-lg bg-white">
           <CardHeader className="pb-3 bg-white">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">Notifications</CardTitle>
+              <CardTitle className="text-base sm:text-lg">Notifications</CardTitle>
               {unreadCount > 0 && (
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={handleMarkAllAsRead}
-                  className="text-xs"
+                  className="text-xs min-h-[44px]"
                 >
                   <CheckCheck className="h-4 w-4 mr-1" />
-                  Mark all read
+                  <span className="hidden sm:inline">Mark all read</span>
+                  <span className="sm:hidden">Read all</span>
                 </Button>
               )}
             </div>
           </CardHeader>
           <CardContent className="p-0 bg-white">
-            <ScrollArea className="h-80">
+            <ScrollArea className="h-60 sm:h-80">
               {notifications.length === 0 ? (
                 <div className="p-6 text-center text-gray-500 bg-white">
                   <Bell className="h-8 w-8 mx-auto mb-2 opacity-50" />

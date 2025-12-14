@@ -13,32 +13,32 @@ export default function CookiePolicy() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white py-6 sm:py-8 md:py-12 px-3 sm:px-4 md:px-6 lg:px-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 md:p-12"
+        className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-4 sm:p-6 md:p-8 lg:p-12"
       >
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">Cookie Policy</h1>
-        <p className="text-sm text-gray-600 mb-8">Last Updated: December 12, 2025</p>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight">Cookie Policy</h1>
+        <p className="text-xs sm:text-sm text-gray-600 mb-6 sm:mb-8">Last Updated: December 12, 2025</p>
 
-        <div className="prose prose-purple max-w-none">
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. What Are Cookies?</h2>
-            <p className="text-gray-700 mb-4">
+        <div className="prose prose-purple max-w-none text-sm sm:text-base">
+          <section className="mb-6 sm:mb-8">
+            <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3 sm:mb-4 leading-tight">1. What Are Cookies?</h2>
+            <p className="text-gray-700 mb-3 sm:mb-4 leading-relaxed">
               Cookies are small text files that are placed on your device (computer, smartphone, or tablet) when you visit a website. They are widely used to make websites work more efficiently and provide information to website owners.
             </p>
-            <p className="text-gray-700">
+            <p className="text-gray-700 leading-relaxed">
               Deals247 uses cookies and similar tracking technologies to enhance your browsing experience, analyze site usage, and deliver personalized content and advertisements.
             </p>
           </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">2. Types of Cookies We Use</h2>
+          <section className="mb-6 sm:mb-8">
+            <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3 sm:mb-4 leading-tight">2. Types of Cookies We Use</h2>
             
-            <h3 className="text-xl font-semibold text-gray-800 mb-3">2.1 Essential Cookies (Strictly Necessary)</h3>
-            <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-4">
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2 sm:mb-3 leading-tight">2.1 Essential Cookies (Strictly Necessary)</h3>
+            <div className="bg-green-50 border-l-4 border-green-500 p-3 sm:p-4 mb-3 sm:mb-4 text-sm sm:text-base">
               <p className="text-gray-700 mb-2"><strong>Purpose:</strong> These cookies are necessary for the website to function properly.</p>
               <p className="text-gray-700 mb-2"><strong>Examples:</strong></p>
               <ul className="list-disc pl-6 text-gray-700 space-y-1">

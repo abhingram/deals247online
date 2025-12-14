@@ -34,12 +34,6 @@ export const MobileNavigation = ({ savedDealsCount = 0 }) => {
       active: location.pathname === '/'
     },
     {
-      label: 'Search',
-      icon: Search,
-      path: '/search',
-      active: location.pathname === '/search'
-    },
-    {
       label: 'Saved',
       icon: Heart,
       path: '/dashboard',
@@ -216,16 +210,9 @@ export const MobileNavigation = ({ savedDealsCount = 0 }) => {
           ))}
         </div>
       </div>
-
-      {/* Add padding to account for fixed navigation */}
-      <div className="md:hidden pt-16 pb-20" />
     </>
   );
 };
-
-/**
- * Mobile-Optimized Deal Card
- */
 export const MobileDealCard = ({ deal, onSave, onClick, isSaved = false }) => {
   return (
     <div

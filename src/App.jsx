@@ -16,7 +16,6 @@ const SubmitDeal = React.lazy(() => import('@/pages/SubmitDeal'));
 const AdminPanel = React.lazy(() => import('@/pages/AdminPanel'));
 const AdvancedSearchPage = React.lazy(() => import('@/pages/AdvancedSearchPage'));
 const DealComparisonPage = React.lazy(() => import('@/pages/DealComparisonPage'));
-const RecommendationsPage = React.lazy(() => import('@/pages/RecommendationsPage'));
 const HotPage = React.lazy(() => import('@/pages/HotPage'));
 const PopularPage = React.lazy(() => import('@/pages/PopularPage'));
 const TalkingPage = React.lazy(() => import('@/pages/TalkingPage'));
@@ -79,7 +78,6 @@ function App() {
                 <Route path="/search" element={<AdvancedSearchPage />} />
                 <Route path="/comparisons" element={<DealComparisonPage />} />
                 <Route path="/comparison/:id" element={<DealComparisonPage />} />
-                <Route path="/recommendations" element={<RecommendationsPage />} />
                 <Route path="/hot" element={<HotPage />} />
                 <Route path="/popular" element={<PopularPage />} />
                 <Route path="/talking" element={<TalkingPage />} />
