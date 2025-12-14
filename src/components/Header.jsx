@@ -54,18 +54,17 @@ const Header = ({ onSearch }) => {
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
-        <div className="flex items-center justify-between h-14 sm:h-16">
+        <div className="flex items-center justify-between h-16 sm:h-18 lg:h-20">
           {/* Logo - Always visible */}
-          <div 
-            className="flex items-center gap-2 sm:gap-3 flex-shrink-0 cursor-pointer" 
+          <div
+            className="flex items-center flex-shrink-0 cursor-pointer"
             onClick={() => navigate('/')}
           >
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-orange-500 to-pink-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg sm:text-xl">D</span>
-            </div>
-            <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-orange-500 to-pink-600 bg-clip-text text-transparent">
-              Deals247
-            </span>
+            <img
+              src="/Deal247.png"
+              alt="Deals247 Logo"
+              className="h-12 sm:h-14 lg:h-16 w-auto object-contain"
+            />
           </div>
             
           {/* Desktop Navigation */}
