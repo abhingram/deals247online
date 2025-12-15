@@ -996,7 +996,7 @@ const AdminPanel = () => {
                             <p className="text-xs sm:text-sm text-gray-500">{deal.store_name} • {deal.category_name}</p>
                             <div className="flex items-center flex-wrap gap-2 mt-1">
                               <span className="text-xs sm:text-sm text-green-600 font-medium">
-                                ${deal.price}
+                                ₹{deal.price}
                               </span>
                               <span className={`text-xs px-2 py-0.5 rounded-full ${
                                 deal.status === 'expired' ? 'bg-red-100 text-red-800' :
@@ -1298,7 +1298,7 @@ const AdminPanel = () => {
                             <p className="font-medium text-gray-900 text-sm sm:text-base line-clamp-2">{deal.title}</p>
                             <p className="text-xs sm:text-sm text-gray-500 mt-1">{deal.store} • {deal.category}</p>
                             <p className="text-sm font-medium text-green-600 mt-1">
-                              ${deal.discounted_price} <span className="text-gray-400 line-through">${deal.original_price}</span>
+                              ₹{deal.discounted_price} <span className="text-gray-400 line-through">₹{deal.original_price}</span>
                               <span className="text-orange-600 ml-2">({deal.discount}% off)</span>
                             </p>
                           </div>
@@ -1549,7 +1549,7 @@ const AdminPanel = () => {
                             <p className="font-medium text-gray-900 line-clamp-1">{deal.title}</p>
                             <p className="text-sm text-gray-500">{deal.store} • {deal.category}</p>
                             <p className="text-sm font-medium text-green-600">
-                              ${deal.discounted_price} <span className="text-gray-400 line-through">${deal.original_price}</span>
+                              ₹{deal.discounted_price} <span className="text-gray-400 line-through">₹{deal.original_price}</span>
                               <span className="text-orange-600 ml-2">({deal.discount}% off)</span>
                             </p>
                             <p className="text-xs text-red-600 mt-1">
@@ -1771,7 +1771,7 @@ const AdminPanel = () => {
                           <div className="col-span-4 truncate text-sm">{link.url}</div>
                           <div className="col-span-2 text-center">{link.clicks || 0}</div>
                           <div className="col-span-2 text-center">{link.conversions || 0}</div>
-                          <div className="col-span-2 text-center">${link.commission?.toFixed(2) || '0.00'}</div>
+                          <div className="col-span-2 text-center">₹{link.commission?.toFixed(2) || '0.00'}</div>
                           <div className="col-span-2 flex gap-2">
                             <Button variant="outline" size="sm">Edit</Button>
                             <Button variant="outline" size="sm" className="text-red-600">Delete</Button>
@@ -1798,15 +1798,15 @@ const AdminPanel = () => {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                   <div className="text-center">
-                    <p className="text-2xl font-bold text-green-600">${commissionData.totalEarned || '0.00'}</p>
+                    <p className="text-2xl font-bold text-green-600">₹{commissionData.totalEarned || '0.00'}</p>
                     <p className="text-sm text-gray-600">Total Earned</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-2xl font-bold text-blue-600">${commissionData.pending || '0.00'}</p>
+                    <p className="text-2xl font-bold text-blue-600">₹{commissionData.pending || '0.00'}</p>
                     <p className="text-sm text-gray-600">Pending Payout</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-2xl font-bold text-purple-600">${commissionData.paid || '0.00'}</p>
+                    <p className="text-2xl font-bold text-purple-600">₹{commissionData.paid || '0.00'}</p>
                     <p className="text-sm text-gray-600">Paid Out</p>
                   </div>
                 </div>
@@ -1854,7 +1854,7 @@ const AdminPanel = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-gray-600">Revenue</p>
-                      <p className="text-2xl font-bold text-green-600">${businessAnalytics.revenue?.total || '0.00'}</p>
+                      <p className="text-2xl font-bold text-green-600">₹{businessAnalytics.revenue?.total || '0.00'}</p>
                       <p className="text-sm text-green-600">+{businessAnalytics.revenue?.growth || '0'}%</p>
                     </div>
                     <DollarSign className="h-8 w-8 text-green-500" />
@@ -1880,7 +1880,7 @@ const AdminPanel = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-gray-600">Avg Deal Value</p>
-                      <p className="text-2xl font-bold text-purple-600">${businessAnalytics.revenue?.avgDealValue || '0.00'}</p>
+                      <p className="text-2xl font-bold text-purple-600">₹{businessAnalytics.revenue?.avgDealValue || '0.00'}</p>
                       <p className="text-sm text-purple-600">Per transaction</p>
                     </div>
                     <TrendingUp className="h-8 w-8 text-purple-500" />
@@ -1993,7 +1993,7 @@ const AdminPanel = () => {
                             <p className="text-gray-500">Conversions</p>
                           </div>
                           <div className="text-center">
-                            <p className="font-medium text-gray-900 text-green-600">${affiliate.commission || '0.00'}</p>
+                            <p className="font-medium text-gray-900 text-green-600">₹{affiliate.commission || '0.00'}</p>
                             <p className="text-gray-500">Commission</p>
                           </div>
                         </div>

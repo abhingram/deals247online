@@ -267,7 +267,7 @@ const DealsGrid = ({ searchQuery, selectedCategory, filterType }) => {
           <div className="flex-1 min-w-0">
             {loading && deals.length === 0 ? (
               viewMode === 'card' ? (
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
                   {[...Array(8)].map((_, i) => (
                     <div key={i} className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm animate-pulse flex">
                       <div className="flex-1 pr-3">
@@ -332,7 +332,7 @@ const DealsGrid = ({ searchQuery, selectedCategory, filterType }) => {
             ) : (
               <>
                 {viewMode === 'card' ? (
-                  <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
                     {deals.map((deal, index) => (
                       <motion.div
                         key={deal.id}

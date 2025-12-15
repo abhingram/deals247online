@@ -6,6 +6,7 @@ import { NotificationProvider } from '@/contexts/NotificationContext';
 import { MobileNavigation } from '@/components/MobileUI';
 import { PWAInstallPrompt, OfflineIndicator, PWAUpdatePrompt } from '@/components/PWAComponents';
 import { usePerformanceMonitor } from '@/hooks/usePerformance.jsx';
+import { DesktopTitleBar, DesktopNotificationManager, useDesktopKeyboardShortcuts, DesktopAppIndicator } from '@/components/DesktopIntegration';
 import BackToTop from '@/components/BackToTop';
 import ProtectedRoute from '@/components/ProtectedRoute';
 
@@ -53,11 +54,17 @@ const PerformanceMonitor = () => {
 };
 
 function App() {
+  // Initialize desktop keyboard shortcuts
+  useDesktopKeyboardShortcuts();
+
   return (
     <AuthProvider>
       <NotificationProvider>
         <Router>
           <div className="min-h-screen bg-gray-50">
+            {/* Desktop title bar */}
+            <DesktopTitleBar />
+
             {/* Performance monitoring */}
             <PerformanceMonitor />
 
@@ -68,6 +75,9 @@ function App() {
             <PWAInstallPrompt />
             <OfflineIndicator />
             <PWAUpdatePrompt />
+
+            {/* Desktop notification manager */}
+            <DesktopNotificationManager />
 
             <Suspense fallback={<PageLoader />}>
               <Routes>
@@ -107,6 +117,9 @@ function App() {
             
             {/* Back to Top button */}
             <BackToTop />
+
+            {/* Desktop app indicator */}
+            <DesktopAppIndicator />
           </div>
         </Router>
       </NotificationProvider>

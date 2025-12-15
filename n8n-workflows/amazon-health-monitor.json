@@ -1,0 +1,237 @@
+{
+  "name": "Amazon Integration Health Monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hours": 6
+            }
+          ]
+        }
+      },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "http://localhost:5000/api/internal/amazon/stats",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_ADMIN_TOKEN_HERE"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Get Stats",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5000/api/internal/amazon/test-connection",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_ADMIN_TOKEN_HERE"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Test Connection",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        460,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.success }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Stats Success Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.success }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Connection Success Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        680,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.connection_successful }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Overall Health Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "subject": "Amazon Integration - Health OK ✅",
+        "body": "✅ Amazon integration health check passed.<br><br>Stats API: ✅<br>Connection Test: ✅<br><br>Product Stats: {{ $json.data.ingestor.products }}<br>Deal Stats: {{ $json.data.refresher.deals }}<br><br>Timestamp: {{ $now }}"
+      },
+      "name": "Health OK Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        250
+      ]
+    },
+    {
+      "parameters": {
+        "subject": "Amazon Integration - Health Issues ⚠️",
+        "body": "⚠️ Amazon integration health check detected issues.<br><br>Stats API: {{ $node[\"Stats Success Check\"].json.success ? '✅' : '❌' }}<br>Connection Test: {{ $node[\"Connection Success Check\"].json.success ? '✅' : '❌' }}<br><br>Please check the system and resolve issues.<br><br>Timestamp: {{ $now }}"
+      },
+      "name": "Health Issues Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        450
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Stats",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Test Connection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Stats": {
+      "main": [
+        [
+          {
+            "node": "Stats Success Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test Connection": {
+      "main": [
+        [
+          {
+            "node": "Connection Success Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stats Success Check": {
+      "main": [
+        [
+          {
+            "node": "Overall Health Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Connection Success Check": {
+      "main": [
+        [
+          {
+            "node": "Overall Health Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Overall Health Check": {
+      "main": [
+        [
+          {
+            "node": "Health OK Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Health Issues Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {},
+  "staticData": null
+}

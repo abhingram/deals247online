@@ -201,7 +201,7 @@ const DealComparison = ({ comparisonId, onClose }) => {
               <td className="border border-gray-300 p-4 font-medium">Original Price</td>
               {deals.map(deal => (
                 <td key={deal.id} className="border border-gray-300 p-4 text-center">
-                  ${deal.originalPrice?.toFixed(2) || 'N/A'}
+                  ₹{deal.originalPrice?.toFixed(2) || 'N/A'}
                 </td>
               ))}
             </tr>
@@ -209,7 +209,7 @@ const DealComparison = ({ comparisonId, onClose }) => {
               <td className="border border-gray-300 p-4 font-medium">Deal Price</td>
               {deals.map(deal => (
                 <td key={deal.id} className="border border-gray-300 p-4 text-center font-semibold text-green-600">
-                  ${deal.dealPrice?.toFixed(2) || 'N/A'}
+                  ₹{deal.dealPrice?.toFixed(2) || 'N/A'}
                 </td>
               ))}
             </tr>
@@ -225,7 +225,7 @@ const DealComparison = ({ comparisonId, onClose }) => {
               <td className="border border-gray-300 p-4 font-medium">Savings</td>
               {deals.map(deal => (
                 <td key={deal.id} className="border border-gray-300 p-4 text-center text-green-600 font-semibold">
-                  ${deal.savings?.toFixed(2) || 'N/A'}
+                  ₹{deal.savings?.toFixed(2) || 'N/A'}
                 </td>
               ))}
             </tr>
@@ -315,11 +315,11 @@ const DealComparison = ({ comparisonId, onClose }) => {
               </div>
               <div>
                 <span className="text-gray-600 font-medium">Original Price</span>
-                <p className="text-gray-900">${deal.originalPrice?.toFixed(2) || 'N/A'}</p>
+                <p className="text-gray-900">₹{deal.originalPrice?.toFixed(2) || 'N/A'}</p>
               </div>
               <div>
                 <span className="text-gray-600 font-medium">Deal Price</span>
-                <p className="text-green-600 font-semibold">${deal.dealPrice?.toFixed(2) || 'N/A'}</p>
+                <p className="text-green-600 font-semibold">₹{deal.dealPrice?.toFixed(2) || 'N/A'}</p>
               </div>
               <div>
                 <span className="text-gray-600 font-medium">Discount</span>
@@ -327,7 +327,7 @@ const DealComparison = ({ comparisonId, onClose }) => {
               </div>
               <div>
                 <span className="text-gray-600 font-medium">Savings</span>
-                <p className="text-green-600 font-semibold">${deal.savings?.toFixed(2) || 'N/A'}</p>
+                <p className="text-green-600 font-semibold">₹{deal.savings?.toFixed(2) || 'N/A'}</p>
               </div>
               <div className="col-span-2">
                 <span className="text-gray-600 font-medium">Categories</span>

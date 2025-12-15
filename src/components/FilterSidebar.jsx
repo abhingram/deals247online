@@ -62,8 +62,8 @@ const FilterSidebar = ({ show, onClose, onFilterChange }) => {
               className="mb-3 sm:mb-4 min-h-[44px] py-3"
             />
             <div className="flex items-center justify-between text-xs sm:text-sm text-gray-600">
-              <span>${priceRange[0]}</span>
-              <span>${priceRange[1]}</span>
+              <span>₹{priceRange[0]}</span>
+              <span>₹{priceRange[1]}</span>
             </div>
           </div>
 

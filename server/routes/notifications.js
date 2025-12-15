@@ -1,6 +1,7 @@
 import express from 'express';
 import db from '../config/database.js';
 import { authenticateToken } from '../middleware/auth.js';
+import { NotificationService } from '../services/notifications/notificationService.js';
 
 const router = express.Router();
 
@@ -274,6 +275,112 @@ router.get('/unread-count', authenticateToken, async (req, res) => {
     }
 
     res.status(500).json({ error: 'Failed to fetch unread count' });
+  }
+});
+
+// ===== PHASE 4: SMART NOTIFICATIONS ENDPOINTS =====
+
+// Get personalized notifications for user
+router.get('/personalized', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.firebase_uid;
+    const notificationService = new NotificationService();
+
+    const notifications = await notificationService.createPersonalizedNotifications(userId);
+
+    await notificationService.disconnect();
+
+    res.json({
+      user_id: userId,
+      personalized_notifications: notifications
+    });
+  } catch (error) {
+    console.error('Error getting personalized notifications:', error);
+    res.status(500).json({ error: 'Failed to get personalized notifications' });
+  }
+});
+
+// Get expiring deal notifications
+router.get('/expiring-deals', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.firebase_uid;
+    const { hours = 24 } = req.query;
+
+    const notificationService = new NotificationService();
+
+    const notifications = await notificationService.createExpiringDealNotifications(userId, parseInt(hours));
+
+    await notificationService.disconnect();
+
+    res.json({
+      user_id: userId,
+      expiring_deals: notifications,
+      time_window_hours: hours
+    });
+  } catch (error) {
+    console.error('Error getting expiring deal notifications:', error);
+    res.status(500).json({ error: 'Failed to get expiring deal notifications' });
+  }
+});
+
+// Update user notification preferences (enhanced for Phase 4)
+router.put('/preferences', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.firebase_uid;
+    const {
+      email_enabled,
+      push_enabled,
+      deal_categories,
+      price_range_min,
+      price_range_max,
+      discount_threshold,
+      favorite_stores
+    } = req.body;
+
+    await executeQueryWithRetry(`
+      INSERT INTO notification_preferences
+        (user_id, email_enabled, push_enabled, deal_categories, price_range_min, price_range_max, discount_threshold, favorite_stores, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())
+      ON DUPLICATE KEY UPDATE
+        email_enabled = VALUES(email_enabled),
+        push_enabled = VALUES(push_enabled),
+        deal_categories = VALUES(deal_categories),
+        price_range_min = VALUES(price_range_min),
+        price_range_max = VALUES(price_range_max),
+        discount_threshold = VALUES(discount_threshold),
+        favorite_stores = VALUES(favorite_stores),
+        updated_at = NOW()
+    `, [
+      userId,
+      email_enabled !== undefined ? email_enabled : true,
+      push_enabled !== undefined ? push_enabled : true,
+      JSON.stringify(deal_categories || []),
+      price_range_min || null,
+      price_range_max || null,
+      discount_threshold || 0,
+      JSON.stringify(favorite_stores || [])
+    ]);
+
+    res.json({
+      message: 'Notification preferences updated successfully',
+      preferences: {
+        email_enabled: email_enabled !== undefined ? email_enabled : true,
+        push_enabled: push_enabled !== undefined ? push_enabled : true,
+        deal_categories: deal_categories || [],
+        price_range_min: price_range_min || null,
+        price_range_max: price_range_max || null,
+        discount_threshold: discount_threshold || 0,
+        favorite_stores: favorite_stores || []
+      }
+    });
+  } catch (error) {
+    console.error('Error updating notification preferences:', error);
+
+    if (error.code === 'ECONNRESET' || error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
+      return res.status(503).json({ error: 'Database connection error. Please try again.' });
+    }
+
+    res.status(500).json({ error: 'Failed to update notification preferences' });
   }
 });
 

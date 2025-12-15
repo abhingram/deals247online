@@ -152,6 +152,20 @@ export const api = {
     return response.json();
   },
 
+  updateProfile: async (profileData) => {
+    const token = localStorage.getItem('authToken');
+    const response = await fetch(`${API_BASE_URL}/users/profile`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(profileData),
+    });
+    if (!response.ok) throw new Error('Failed to update profile');
+    return response.json();
+  },
+
   getUserProfile: async (firebaseUid) => {
     const response = await fetch(`${API_BASE_URL}/users/profile/${firebaseUid}`);
     if (!response.ok) throw new Error('Failed to fetch user profile');

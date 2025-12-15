@@ -1,14 +1,13 @@
 import express from 'express';
 import pool from '../database/connection.js';
+import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
 // Get user's favorites
-router.get('/', async (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
   try {
-    // TODO: Get user ID from Firebase token
-    // For now, return empty array
-    const userId = req.query.userId || 'temp_user_id';
+    const userId = req.user.firebase_uid;
 
     const [favorites] = await pool.execute(`
       SELECT d.* FROM deals d
@@ -25,12 +24,13 @@ router.get('/', async (req, res) => {
 });
 
 // Add deal to favorites
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
   try {
-    const { dealId, userId } = req.body;
+    const { dealId } = req.body;
+    const userId = req.user.firebase_uid;
 
-    if (!dealId || !userId) {
-      return res.status(400).json({ error: 'Deal ID and User ID are required' });
+    if (!dealId) {
+      return res.status(400).json({ error: 'Deal ID is required' });
     }
 
     // Check if already favorited
@@ -57,10 +57,10 @@ router.post('/', async (req, res) => {
 });
 
 // Remove deal from favorites
-router.delete('/:dealId', async (req, res) => {
+router.delete('/:dealId', authenticateToken, async (req, res) => {
   try {
     const { dealId } = req.params;
-    const userId = req.query.userId || 'temp_user_id';
+    const userId = req.user.firebase_uid;
 
     await pool.execute(
       'DELETE FROM user_favorites WHERE user_id = ? AND deal_id = ?',
@@ -75,10 +75,10 @@ router.delete('/:dealId', async (req, res) => {
 });
 
 // Check if deal is favorited
-router.get('/:dealId/check', async (req, res) => {
+router.get('/:dealId/check', authenticateToken, async (req, res) => {
   try {
     const { dealId } = req.params;
-    const userId = req.query.userId || 'temp_user_id';
+    const userId = req.user.firebase_uid;
 
     const [result] = await pool.execute(
       'SELECT id FROM user_favorites WHERE user_id = ? AND deal_id = ?',

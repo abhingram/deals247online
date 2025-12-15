@@ -81,7 +81,7 @@ const SavedSearches = ({ onApplySearch }) => {
     const parts = [];
 
     if (filters.priceRange && (filters.priceRange[0] > 0 || filters.priceRange[1] < 1000)) {
-      parts.push(`$${filters.priceRange[0]} - $${filters.priceRange[1]}`);
+      parts.push(`₹${filters.priceRange[0]} - ₹${filters.priceRange[1]}`);
     }
 
     if (filters.discountRange && (filters.discountRange[0] > 0 || filters.discountRange[1] < 100)) {

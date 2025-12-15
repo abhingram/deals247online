@@ -178,7 +178,7 @@ const AdvancedSearchPage = () => {
                 <p>Applied filters:</p>
                 <ul className="list-disc list-inside mt-1">
                   {currentFilters.priceRange && (
-                    <li>Price: ${currentFilters.priceRange[0]} - ${currentFilters.priceRange[1]}</li>
+                    <li>Price: ₹{currentFilters.priceRange[0]} - ₹{currentFilters.priceRange[1]}</li>
                   )}
                   {currentFilters.discountRange && (
                     <li>Discount: {currentFilters.discountRange[0]}% - {currentFilters.discountRange[1]}%</li>

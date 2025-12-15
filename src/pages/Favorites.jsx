@@ -53,11 +53,26 @@ const Favorites = () => {
   };
 
   const handleBuyDeal = (deal) => {
-    // TODO: Open deal link
-    toast({
-      title: "Opening deal",
-      description: `Redirecting to ${deal.store}...`,
-    });
+    // Open deal link in new tab/window
+    if (deal.affiliate_url) {
+      window.open(deal.affiliate_url, '_blank', 'noopener,noreferrer');
+      toast({
+        title: "Opening deal",
+        description: `Redirecting to ${deal.store}...`,
+      });
+    } else if (deal.url) {
+      window.open(deal.url, '_blank', 'noopener,noreferrer');
+      toast({
+        title: "Opening deal",
+        description: `Redirecting to ${deal.store}...`,
+      });
+    } else {
+      toast({
+        title: "Link not available",
+        description: "This deal link is currently not available.",
+        variant: "destructive",
+      });
+    }
   };
 
   if (loading) {

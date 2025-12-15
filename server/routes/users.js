@@ -1,5 +1,6 @@
 import express from 'express';
 import db from '../database/connection.js';
+import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -152,6 +153,55 @@ router.delete('/:id', requireAdmin, async (req, res) => {
   } catch (error) {
     console.error('Delete user error:', error);
     res.status(500).json({ error: 'Failed to delete user' });
+  }
+});
+
+// Update user profile (authenticated)
+router.put('/profile', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.firebase_uid;
+    const { displayName, email } = req.body;
+
+    // Validate input
+    if (!displayName || displayName.trim().length === 0) {
+      return res.status(400).json({ error: 'Display name is required' });
+    }
+
+    // Update user profile in database
+    await db.query(
+      'UPDATE users SET display_name = ?, updated_at = CURRENT_TIMESTAMP WHERE firebase_uid = ?',
+      [displayName.trim(), userId]
+    );
+
+    // Note: Email updates require Firebase re-authentication and are handled on the frontend
+    // We don't update email here to avoid authentication issues
+
+    res.json({
+      message: 'Profile updated successfully',
+      displayName: displayName.trim()
+    });
+  } catch (error) {
+    console.error('Profile update error:', error);
+    res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
+
+// Change password for email/password accounts (placeholder - requires Firebase Admin SDK)
+router.post('/change-password', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.firebase_uid;
+    const { currentPassword, newPassword } = req.body;
+
+    // This would require Firebase Admin SDK for server-side password changes
+    // For now, return a message that password changes should be done through Firebase Auth
+
+    res.json({
+      message: 'Password change request received. Please use Firebase Authentication for password changes.',
+      note: 'Client-side password changes are recommended for security.'
+    });
+  } catch (error) {
+    console.error('Password change error:', error);
+    res.status(500).json({ error: 'Failed to change password' });
   }
 });
 

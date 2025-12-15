@@ -6,7 +6,7 @@ const HeroSection = () => {
   const stats = [
     { icon: TrendingUp, label: 'Active Deals', value: '5,000+' },
     { icon: Zap, label: 'New Today', value: '150+' },
-    { icon: Gift, label: 'Users Saved', value: '$2M+' },
+    { icon: Gift, label: 'Users Saved', value: '₹2M+' },
   ];
 
   return (

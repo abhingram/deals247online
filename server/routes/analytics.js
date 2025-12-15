@@ -1,6 +1,10 @@
 import express from 'express';
 import db from '../database/connection.js';
 import { authenticateAdmin } from '../middleware/auth.js';
+import { AnalyticsService } from '../services/analytics/analyticsService.js';
+import { RecommendationService } from '../services/analytics/recommendationService.js';
+import { ChatbotService } from '../services/analytics/chatbotService.js';
+import { CacheService } from '../services/cache/cacheService.js';
 
 const router = express.Router();
 
@@ -521,5 +525,426 @@ async function calculateAnalytics(startDate, endDate) {
     throw error;
   }
 }
+
+// ===== PHASE 4: ADVANCED ANALYTICS ENDPOINTS =====
+
+// Get deal predictions
+router.get('/predictions/:dealId', authenticateAdmin, async (req, res) => {
+  try {
+    const { dealId } = req.params;
+    const analyticsService = new AnalyticsService();
+
+    const prediction = await analyticsService.predictDealLikelihood(parseInt(dealId));
+
+    await analyticsService.disconnect();
+
+    res.json({
+      deal_id: dealId,
+      prediction: prediction
+    });
+  } catch (error) {
+    console.error('Error getting deal prediction:', error);
+    res.status(500).json({ error: 'Failed to get deal prediction' });
+  }
+});
+
+// Get user segments
+router.get('/users/:userId/segments', authenticateAdmin, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const analyticsService = new AnalyticsService();
+
+    const segments = await analyticsService.segmentUser(userId);
+
+    await analyticsService.disconnect();
+
+    res.json({
+      user_id: userId,
+      segments: segments
+    });
+  } catch (error) {
+    console.error('Error getting user segments:', error);
+    res.status(500).json({ error: 'Failed to get user segments' });
+  }
+});
+
+// Get performance metrics (Phase 4 enhanced)
+router.get('/performance/:timeRange', authenticateAdmin, async (req, res) => {
+  try {
+    const { timeRange } = req.params;
+    const cacheService = new CacheService();
+
+    // Use cached analytics for better performance
+    const metrics = await cacheService.getCachedAnalytics(timeRange);
+
+    await cacheService.disconnect();
+
+    res.json(metrics);
+  } catch (error) {
+    console.error('Error getting performance metrics:', error);
+    res.status(500).json({ error: 'Failed to get performance metrics' });
+  }
+});
+
+// Update deal analytics
+router.post('/deals/:dealId/analytics', authenticateAdmin, async (req, res) => {
+  try {
+    const { dealId } = req.params;
+    const { action } = req.body; // 'view', 'click', 'share', etc.
+
+    const analyticsService = new AnalyticsService();
+
+    const result = await analyticsService.updateDealAnalytics(parseInt(dealId), action);
+
+    await analyticsService.disconnect();
+
+    res.json({
+      deal_id: dealId,
+      analytics: result,
+      message: 'Deal analytics updated successfully'
+    });
+  } catch (error) {
+    console.error('Error updating deal analytics:', error);
+    res.status(500).json({ error: 'Failed to update deal analytics' });
+  }
+});
+
+// Get cached analytics summary
+router.get('/cached/summary', authenticateAdmin, async (req, res) => {
+  try {
+    const { timeRange = '7d' } = req.query;
+    const cacheService = new CacheService();
+
+    const analytics = await cacheService.getCachedAnalytics(timeRange);
+
+    await cacheService.disconnect();
+
+    res.json(analytics);
+  } catch (error) {
+    console.error('Error getting cached analytics:', error);
+    res.status(500).json({ error: 'Failed to get cached analytics' });
+  }
+});
+
+// ============================================================================
+// REVENUE ANALYTICS ROUTES (PHASE 6)
+// ============================================================================
+
+// Get revenue dashboard overview
+router.get('/revenue/dashboard', authenticateAdmin, async (req, res) => {
+  try {
+    const { period = '30' } = req.query;
+    const days = parseInt(period);
+
+    // Get revenue summary for the period
+    const [revenueSummary] = await db.query(`
+      SELECT
+        SUM(ra.affiliate_commission) as affiliate_revenue,
+        SUM(ra.subscription_revenue) as subscription_revenue,
+        SUM(ra.advertising_revenue) as advertising_revenue,
+        SUM(ra.total_revenue) as total_revenue
+      FROM revenue_analytics ra
+      WHERE ra.date >= DATE_SUB(CURRENT_DATE, INTERVAL ? DAY)
+    `, [days]);
+
+    // Get today's revenue
+    const [todayRevenue] = await db.query(`
+      SELECT * FROM revenue_analytics WHERE date = CURRENT_DATE
+    `);
+
+    // Get monthly revenue trend
+    const [monthlyTrend] = await db.query(`
+      SELECT
+        DATE_FORMAT(date, '%Y-%m') as month,
+        SUM(affiliate_commission) as affiliate,
+        SUM(subscription_revenue) as subscriptions,
+        SUM(advertising_revenue) as advertising,
+        SUM(total_revenue) as total
+      FROM revenue_analytics
+      WHERE date >= DATE_SUB(CURRENT_DATE, INTERVAL 12 MONTH)
+      GROUP BY DATE_FORMAT(date, '%Y-%m')
+      ORDER BY month DESC
+      LIMIT 12
+    `);
+
+    res.json({
+      summary: revenueSummary[0],
+      today: todayRevenue[0] || {},
+      monthlyTrend
+    });
+  } catch (error) {
+    console.error('Error fetching revenue dashboard:', error);
+    res.status(500).json({ error: 'Failed to fetch revenue dashboard' });
+  }
+});
+
+// Get detailed revenue analytics
+router.get('/revenue/detailed', authenticateAdmin, async (req, res) => {
+  try {
+    const { start_date, end_date, group_by = 'day' } = req.query;
+
+    let dateFilter = '';
+    const params = [];
+
+    if (start_date) {
+      dateFilter += ' AND ra.date >= ?';
+      params.push(start_date);
+    }
+
+    if (end_date) {
+      dateFilter += ' AND ra.date <= ?';
+      params.push(end_date);
+    }
+
+    let groupByClause = 'ra.date';
+    if (group_by === 'week') {
+      groupByClause = 'DATE_FORMAT(ra.date, "%Y-%u")';
+    } else if (group_by === 'month') {
+      groupByClause = 'DATE_FORMAT(ra.date, "%Y-%m")';
+    }
+
+    // Get revenue breakdown
+    const [revenueBreakdown] = await db.query(`
+      SELECT
+        ${groupByClause} as period,
+        SUM(ra.affiliate_commission) as affiliate_revenue,
+        SUM(ra.subscription_revenue) as subscription_revenue,
+        SUM(ra.advertising_revenue) as advertising_revenue,
+        SUM(ra.total_revenue) as total_revenue
+      FROM revenue_analytics ra
+      WHERE 1=1 ${dateFilter}
+      GROUP BY ${groupByClause}
+      ORDER BY period DESC
+      LIMIT 100
+    `, params);
+
+    res.json({
+      breakdown: revenueBreakdown,
+      groupBy: group_by
+    });
+  } catch (error) {
+    console.error('Error fetching detailed revenue analytics:', error);
+    res.status(500).json({ error: 'Failed to fetch detailed analytics' });
+  }
+});
+
+// Get customer lifetime value (CLV) analysis
+router.get('/revenue/clv', authenticateAdmin, async (req, res) => {
+  try {
+    // Calculate CLV based on subscription and commission data
+    const [clvData] = await db.query(`
+      SELECT
+        u.firebase_uid,
+        u.display_name,
+        u.email,
+        COALESCE(SUM(ac.commission_amount), 0) as affiliate_earnings,
+        COALESCE(us.amount, 0) as subscription_value,
+        DATEDIFF(CURRENT_DATE, u.created_at) as days_since_registration
+      FROM users u
+      LEFT JOIN affiliate_commissions ac ON u.firebase_uid = ac.user_id AND ac.status IN ('approved', 'paid')
+      LEFT JOIN user_subscriptions us ON u.firebase_uid = us.user_id AND us.status = 'active'
+      GROUP BY u.firebase_uid, u.display_name, u.email, u.created_at, us.amount
+      ORDER BY (COALESCE(SUM(ac.commission_amount), 0) + COALESCE(us.amount, 0)) DESC
+      LIMIT 50
+    `);
+
+    const avgClv = clvData.length > 0
+      ? clvData.reduce((sum, user) => sum + user.affiliate_earnings + user.subscription_value, 0) / clvData.length
+      : 0;
+
+    res.json({
+      customers: clvData,
+      averageClv: avgClv
+    });
+  } catch (error) {
+    console.error('Error calculating CLV:', error);
+    res.status(500).json({ error: 'Failed to calculate customer lifetime value' });
+  }
+});
+
+// ===== AI/ML FEATURES =====
+
+// Get personalized deal recommendations
+router.get('/recommendations/personalized', async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const limit = parseInt(req.query.limit) || 10;
+    const context = req.query.context ? JSON.parse(req.query.context) : {};
+
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    const recommendationService = new RecommendationService();
+    const recommendations = await recommendationService.getPersonalizedRecommendations(userId, limit, context);
+
+    res.json({
+      recommendations,
+      count: recommendations.length,
+      generated_at: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Error getting personalized recommendations:', error);
+    res.status(500).json({ error: 'Failed to generate recommendations' });
+  }
+});
+
+// Get trending deals (for new users)
+router.get('/recommendations/trending', async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 10;
+
+    const recommendationService = new RecommendationService();
+    const recommendations = await recommendationService.getTrendingDeals(limit);
+
+    res.json({
+      recommendations,
+      count: recommendations.length,
+      type: 'trending'
+    });
+  } catch (error) {
+    console.error('Error getting trending deals:', error);
+    res.status(500).json({ error: 'Failed to get trending deals' });
+  }
+});
+
+// Track recommendation interactions
+router.post('/recommendations/track', async (req, res) => {
+  try {
+    const { userId, dealId, action } = req.body;
+
+    if (!userId || !dealId || !action) {
+      return res.status(400).json({ error: 'User ID, deal ID, and action are required' });
+    }
+
+    const recommendationService = new RecommendationService();
+
+    if (action === 'click') {
+      await recommendationService.trackRecommendationClick(userId, dealId);
+    } else if (action === 'convert') {
+      await recommendationService.trackRecommendationConversion(userId, dealId);
+    }
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error tracking recommendation:', error);
+    res.status(500).json({ error: 'Failed to track recommendation interaction' });
+  }
+});
+
+// Chatbot message processing
+router.post('/chatbot/message', async (req, res) => {
+  try {
+    const { message, userId, sessionId, context } = req.body;
+
+    if (!message) {
+      return res.status(400).json({ error: 'Message is required' });
+    }
+
+    const chatbotService = new ChatbotService();
+    const result = await chatbotService.processMessage(message, userId, sessionId, context || {});
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error processing chatbot message:', error);
+    res.status(500).json({
+      response: "I'm sorry, I'm having trouble processing your request right now. Please try again later.",
+      deals: [],
+      intent: 'error',
+      entities: {},
+      sessionId: req.body.sessionId
+    });
+  }
+});
+
+// Mark chatbot conversation as helpful
+router.post('/chatbot/helpful', async (req, res) => {
+  try {
+    const { sessionId, helpful } = req.body;
+
+    if (!sessionId || typeof helpful !== 'boolean') {
+      return res.status(400).json({ error: 'Session ID and helpful flag are required' });
+    }
+
+    const chatbotService = new ChatbotService();
+    await chatbotService.markHelpful(sessionId, helpful);
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error marking conversation helpful:', error);
+    res.status(500).json({ error: 'Failed to update conversation feedback' });
+  }
+});
+
+// Get chatbot analytics
+router.get('/chatbot/analytics', authenticateAdmin, async (req, res) => {
+  try {
+    const { period = '30' } = req.query;
+
+    const [analytics] = await db.query(`
+      SELECT
+        COUNT(*) as total_conversations,
+        COUNT(DISTINCT session_id) as unique_sessions,
+        COUNT(DISTINCT user_id) as unique_users,
+        AVG(CASE WHEN was_helpful IS NOT NULL THEN was_helpful ELSE NULL END) as helpful_rate,
+        intent,
+        COUNT(*) as intent_count
+      FROM chatbot_conversations
+      WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL ? DAY)
+      GROUP BY intent
+      ORDER BY intent_count DESC
+    `, [period]);
+
+    const [summary] = await db.query(`
+      SELECT
+        COUNT(*) as total_conversations,
+        COUNT(DISTINCT session_id) as unique_sessions,
+        COUNT(DISTINCT user_id) as unique_users,
+        AVG(CASE WHEN was_helpful = 1 THEN 1 ELSE 0 END) as helpful_rate
+      FROM chatbot_conversations
+      WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL ? DAY)
+    `, [period]);
+
+    res.json({
+      summary: summary[0],
+      intents: analytics,
+      period: `${period} days`
+    });
+  } catch (error) {
+    console.error('Error fetching chatbot analytics:', error);
+    res.status(500).json({ error: 'Failed to fetch chatbot analytics' });
+  }
+});
+
+// Get recommendation performance analytics
+router.get('/recommendations/analytics', authenticateAdmin, async (req, res) => {
+  try {
+    const { period = '30' } = req.query;
+
+    const [performance] = await db.query(`
+      SELECT
+        recommendation_type,
+        COUNT(*) as total_recommendations,
+        AVG(recommendation_score) as avg_score,
+        SUM(CASE WHEN was_clicked = 1 THEN 1 ELSE 0 END) as total_clicks,
+        SUM(CASE WHEN was_converted = 1 THEN 1 ELSE 0 END) as total_conversions,
+        AVG(CASE WHEN was_clicked = 1 THEN recommendation_score ELSE NULL END) as avg_score_clicked,
+        (SUM(CASE WHEN was_clicked = 1 THEN 1 ELSE 0 END) / COUNT(*)) * 100 as click_rate,
+        (SUM(CASE WHEN was_converted = 1 THEN 1 ELSE 0 END) / COUNT(*)) * 100 as conversion_rate
+      FROM user_recommendations
+      WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL ? DAY)
+      GROUP BY recommendation_type
+      ORDER BY total_recommendations DESC
+    `, [period]);
+
+    res.json({
+      performance,
+      period: `${period} days`
+    });
+  } catch (error) {
+    console.error('Error fetching recommendation analytics:', error);
+    res.status(500).json({ error: 'Failed to fetch recommendation analytics' });
+  }
+});
 
 export default router;

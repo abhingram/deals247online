@@ -1,0 +1,120 @@
+{
+  "name": "Amazon Weekly Maintenance",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "weeks": 1
+            }
+          ]
+        }
+      },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5000/api/internal/amazon/cleanup",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_ADMIN_TOKEN_HERE"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Cleanup Expired Deals",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "http://localhost:5000/api/internal/amazon/stats",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_ADMIN_TOKEN_HERE"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Get Final Stats",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "subject": "Amazon Weekly Maintenance Report",
+        "body": "📊 Amazon Integration Weekly Maintenance Report<br><br>🧹 Expired Deals Cleaned: {{ $node[\"Cleanup Expired Deals\"].json.data.cleaned_deals }}<br><br>📈 Current Statistics:<br>- Total Products: {{ $json.data.ingestor.products.total_products }}<br>- Active Products: {{ $json.data.ingestor.products.active_products }}<br>- Total Deals: {{ $json.data.refresher.deals.total_deals }}<br>- Active Deals: {{ $json.data.refresher.deals.active_deals }}<br>- Average Deal Discount: {{ $json.data.refresher.deals.avg_deal_discount }}%<br><br>Timestamp: {{ $now }}"
+      },
+      "name": "Weekly Report Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Cleanup Expired Deals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cleanup Expired Deals": {
+      "main": [
+        [
+          {
+            "node": "Get Final Stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Final Stats": {
+      "main": [
+        [
+          {
+            "node": "Weekly Report Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {},
+  "staticData": null
+}
