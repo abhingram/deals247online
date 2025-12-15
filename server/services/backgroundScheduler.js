@@ -1,4 +1,3 @@
-import cron from 'node-cron';
 import { AnalyticsService } from '../services/analytics/analyticsService.js';
 import { NotificationService } from '../services/notifications/notificationService.js';
 import { CacheService } from '../services/cache/cacheService.js';
@@ -13,6 +12,7 @@ class BackgroundScheduler {
   constructor() {
     this.isRunning = false;
     this.jobs = [];
+    this.cron = null; // Will be loaded dynamically
   }
 
   /**
@@ -22,6 +22,15 @@ class BackgroundScheduler {
     if (this.isRunning) {
       console.log('🔄 Background scheduler already running');
       return;
+    }
+
+    try {
+      // Dynamically import node-cron to handle missing dependency gracefully
+      this.cron = (await import('node-cron')).default;
+    } catch (error) {
+      console.warn('⚠️ node-cron not available, background jobs will not be scheduled:', error.message);
+      console.log('💡 Install node-cron with: npm install node-cron');
+      return; // Don't start scheduler without cron
     }
 
     console.log('🚀 Starting Phase 4 background jobs...');
@@ -64,7 +73,12 @@ class BackgroundScheduler {
    * Schedule a cron job
    */
   scheduleJob(cronExpression, jobName, jobFunction) {
-    const job = cron.schedule(cronExpression, async () => {
+    if (!this.cron) {
+      console.warn(`⚠️ Cannot schedule job ${jobName}: node-cron not available`);
+      return;
+    }
+
+    const job = this.cron.schedule(cronExpression, async () => {
       try {
         console.log(`🔄 Running background job: ${jobName}`);
         await jobFunction();

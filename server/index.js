@@ -117,5 +117,10 @@ app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);
 
   // Start comprehensive background scheduler for Phase 4 features
-  backgroundScheduler.start();
+  try {
+    backgroundScheduler.start();
+  } catch (error) {
+    console.error('❌ Failed to start background scheduler:', error.message);
+    console.log('💡 Server will continue without background jobs');
+  }
 });
