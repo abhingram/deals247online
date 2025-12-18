@@ -1,0 +1,46 @@
+---
+- name: Update apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install base packages
+  apt:
+    name:
+      - git
+      - curl
+      - build-essential
+      - nginx
+      - python3-certbot-nginx
+      - mysql-client
+    state: present
+    update_cache: yes
+
+- name: Ensure deploy user exists
+  user:
+    name: deployer
+    groups: sudo
+    shell: /bin/bash
+    createhome: yes
+
+- name: Add deployer to docker group
+  user:
+    name: deployer
+    groups: docker
+    append: yes
+    state: present
+
+- name: Ensure UFW allows OpenSSH and Nginx Full
+  ufw:
+    rule: allow
+    name: "OpenSSH"
+
+- name: Ensure UFW allows Nginx Full
+  ufw:
+    rule: allow
+    name: "Nginx Full"
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+    policy: deny

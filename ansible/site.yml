@@ -1,0 +1,10 @@
+- name: Deploy Deals247 to Hostinger VPS
+  hosts: hostinger
+  become: true
+  vars_files:
+    - group_vars/all.yml
+  roles:
+    - common
+    - deploy
+    - nginx
+    - certbot

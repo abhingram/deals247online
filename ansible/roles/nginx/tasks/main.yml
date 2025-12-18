@@ -1,0 +1,25 @@
+---
+- name: Copy nginx config template
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-available/deals247
+    mode: '0644'
+
+- name: Enable site
+  file:
+    src: /etc/nginx/sites-available/deals247
+    dest: /etc/nginx/sites-enabled/deals247
+    state: link
+
+- name: Remove default site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Test nginx config
+  command: nginx -t
+
+- name: Restart nginx
+  service:
+    name: nginx
+    state: restarted

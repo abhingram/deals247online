@@ -1,0 +1,12 @@
+---
+- name: Obtain/renew Let's Encrypt certificate
+  shell: |
+    certbot --nginx -d {{ domain }} -d www.{{ domain }} --non-interactive --agree-tos --email {{ cert_email }} --redirect
+  args:
+    creates: /etc/letsencrypt/live/{{ domain }}/fullchain.pem
+  register: certbot_result
+  ignore_errors: yes
+
+- name: Check certbot result
+  debug:
+    msg: "certbot result: {{ certbot_result.rc }}"

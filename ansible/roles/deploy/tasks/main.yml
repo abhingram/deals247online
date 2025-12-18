@@ -1,0 +1,75 @@
+---
+- name: Clone repository
+  git:
+    repo: "{{ repo_url }}"
+    dest: "{{ app_dir }}"
+    version: 'main'
+    force: yes
+
+- name: Ensure correct ownership
+  file:
+    path: "{{ app_dir }}"
+    owner: deployer
+    group: deployer
+    recurse: yes
+
+- name: Install Node.js 20.x (Nodesource)
+  shell: |
+    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+  args:
+    creates: /usr/bin/node
+
+- name: Install npm dependencies
+  npm:
+    path: "{{ app_dir }}"
+    production: no
+
+- name: Build frontend
+  command: npm run build
+  args:
+    chdir: "{{ app_dir }}"
+
+- name: Copy production env template
+  copy:
+    src: "../../server/.env.production.example"
+    dest: "{{ app_dir }}/server/.env.production"
+    owner: deployer
+    group: deployer
+    mode: '0600'
+
+- name: Fail if vault secret not set (db_password)
+  fail:
+    msg: "db_password must be set in Ansible Vault or group_vars/vault.yml"
+  when: db_password is not defined
+
+- name: Fill environment variables (using template)
+  template:
+    src: "env.production.j2"
+    dest: "{{ app_dir }}/server/.env.production"
+    owner: deployer
+    group: deployer
+    mode: '0600'
+
+- name: Import DB schemas (if asked)
+  shell: |
+    mysql -h "{{ db_host }}" -P "{{ db_port }}" -u "{{ db_user }}" -p"{{ db_password }}" "{{ db_name }}" < server/database/schema.sql
+  args:
+    chdir: "{{ app_dir }}"
+  when: import_db | default(false)
+
+- name: Start application with Docker Compose (if use_docker true)
+  shell: docker compose -f docker-compose.hostinger.yml --env-file server/.env.production up -d --build
+  args:
+    chdir: "{{ app_dir }}"
+  when: use_docker
+
+- name: Start application with PM2 (if not using docker)
+  shell: |
+    pm2 stop deals247-backend || true
+    pm2 delete deals247-backend || true
+    pm2 start server/index.js --name deals247-backend --env production --time
+    pm2 save
+  args:
+    chdir: "{{ app_dir }}"
+  when: not use_docker
