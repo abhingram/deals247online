@@ -93,14 +93,14 @@ NODE_ENV=production
 FRONTEND_URL=https://deals247.online
 
 # Database Configuration (Hostinger Remote MySQL)
-DB_HOST=srv994.hstgr.io
-DB_PORT=3306
-DB_NAME=u515501238_deals247_db
-DB_USER=u515501238_deals247_user
-DB_PASSWORD=2ap5HYzh5@R8&Cq
+DB_HOST=${DB_HOST:-srv994.hstgr.io}
+DB_PORT=${DB_PORT:-3306}
+DB_NAME=${DB_NAME:-u515501238_deals247_db}
+DB_USER=${DB_USER:-u515501238_deals247_user}
+DB_PASSWORD=${DB_PASSWORD}
 
 # JWT Configuration
-JWT_SECRET=deals247-jwt-secret-key-production-2025
+JWT_SECRET=${JWT_SECRET}
 JWT_EXPIRES_IN=7d
 
 # CORS Configuration
@@ -136,13 +136,18 @@ echo ""
 # ============================================================================
 echo "🗄️  Step 8: Testing database connection..."
 echo "=========================================="
-mysql -h srv994.hstgr.io -P 3306 -u u515501238_deals247_user -p'2ap5HYzh5@R8&Cq' u515501238_deals247_db -e "SELECT 'Connection successful' as status;" 2>/dev/null
+if [ -z "$DB_PASSWORD" ]; then
+  echo "❌ ERROR: DB_PASSWORD not set. Export DB_PASSWORD before running this script or pass it in the environment."
+  exit 1
+fi
+
+mysql -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" -e "SELECT 'Connection successful' as status;" 2>/dev/null
 
 if [ $? -eq 0 ]; then
     echo "✅ Database connection successful"
 else
     echo "❌ ERROR: Cannot connect to database"
-    echo "Please verify database credentials"
+    echo "Please verify database credentials and network access (Hostinger may require whitelist for remote MySQL)."
     exit 1
 fi
 echo ""
@@ -155,13 +160,13 @@ echo "========================================="
 cd /var/www/deals247
 
 echo "Importing main schema..."
-mysql -h srv994.hstgr.io -P 3306 -u u515501238_deals247_user -p'2ap5HYzh5@R8&Cq' u515501238_deals247_db < server/database/schema.sql
+mysql -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" < server/database/schema.sql
 
 echo "Importing business schema..."
-mysql -h srv994.hstgr.io -P 3306 -u u515501238_deals247_user -p'2ap5HYzh5@R8&Cq' u515501238_deals247_db < server/database/business_schema.sql
+mysql -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" < server/database/business_schema.sql
 
 echo "Importing notifications schema..."
-mysql -h srv994.hstgr.io -P 3306 -u u515501238_deals247_user -p'2ap5HYzh5@R8&Cq' u515501238_deals247_db < server/database/notifications_schema.sql
+mysql -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" < server/database/notifications_schema.sql
 
 echo "✅ Database schemas imported"
 echo ""
@@ -308,7 +313,10 @@ echo "⚠️  IMPORTANT: Make sure your domain DNS is pointed to this server's I
 echo "Press Enter to continue with SSL setup, or Ctrl+C to cancel..."
 read
 
-sudo certbot --nginx -d deals247.online -d www.deals247.online --non-interactive --agree-tos --email admin@deals247.online --redirect
+# Use CERTBOT_EMAIL env var if set, otherwise prompt
+CERT_EMAIL=${CERT_EMAIL:-admin@deals247.online}
+
+sudo certbot --nginx -d deals247.online -d www.deals247.online --non-interactive --agree-tos --email "$CERT_EMAIL" --redirect
 
 if [ $? -eq 0 ]; then
     echo "✅ SSL certificate installed"

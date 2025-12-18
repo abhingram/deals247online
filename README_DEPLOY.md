@@ -48,15 +48,43 @@ railway deploy
 
 ```bash
 # 1. Copy environment file
-cp .env.production .env
+cp .env.production.example .env.production
+# Edit `.env.production` with your production values (do NOT commit secrets to the repo)
 
-# 2. Edit .env with your production values
+# 2. Validate env before deploy
+#    Make sure the following variables are exported or available in `.env.production`:
+#      DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD, JWT_SECRET, SESSION_SECRET
+node server/scripts/validate-prod-env.js
 
-# 3. Deploy with Docker Compose
-docker-compose up -d --build
+# 3. Build and deploy with Docker Compose (recommended for full-stack deploy)
+#    Two deployment modes:
+#    - Full stack on server (app + db + redis) - use `docker-compose.yml`
+#    - App-only using external DB (Hostinger) - use `docker-compose.hostinger.yml` and ensure `.env.production` contains Hostinger DB credentials
 
-# 4. Check logs
-docker-compose logs -f
+# Example: Build and bring up containers (Hostinger external DB mode)
+DB_HOST=srv994.hstgr.io DB_PORT=3306 DB_NAME=u515501238_deals247_db DB_USER=u515501238_deals247_user DB_PASSWORD=your_db_password \
+  docker compose -f docker-compose.hostinger.yml --env-file .env.production up -d --build
+
+# Example: Full local stack (not recommended on small VPS unless required)
+docker compose --env-file .env.production up -d --build
+
+# Notes:
+# - If you are using Hostinger-managed DB, prefer app-only compose (`docker-compose.hostinger.yml`) so database remains managed externally
+# - Ensure Hostinger allows your server IP to connect to the DB (whitelist) and that the DB user has remote access
+# - Do NOT commit secrets; use env files or host secret store
+
+# 4. Verify service health
+#    - Check docker-compose logs
+#    - Use `docker ps` and `docker-compose ps` to confirm containers are healthy
+#    - Use `curl http://localhost:5000/api/ready` to confirm the backend readiness (DB + Redis)
+#    - If readiness returns 503, check DB and Redis connectivity in server logs
+
+# 4. Alternative: PM2 on a VPS
+#    - Install Node.js and PM2
+#    - Copy `.env.production` to server
+#    - Start backend with: `pm2 start ecosystem.config.js --env production`
+#    - Frontend: build with `npm run build` and serve with static server or Nginx
+
 ```
 
 ## Option 4: VPS (Most Control - 30 minutes)
