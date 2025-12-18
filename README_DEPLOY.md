@@ -54,7 +54,23 @@ cp .env.production.example .env.production
 # 2. Validate env before deploy
 #    Make sure the following variables are exported or available in `.env.production`:
 #      DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD, JWT_SECRET, SESSION_SECRET
+#    If you enable DB SSL, set DB_SSL=true and provide DB_SSL_CA_PATH=/path/to/ca.pem
 node server/scripts/validate-prod-env.js
+
+# 2.1 Hostinger remote DB checklist
+#  - In Hostinger control panel: create a database and a restricted DB user for the app
+#  - Whitelist this VPS IP in Hostinger's remote DB access settings: 72.61.235.42
+#  - Optionally enable SSL/TLS for MySQL and obtain the CA file path
+#  - Use the provided SQL template to create the production user: server/sql/create_production_user.sql
+#  Example:
+#    Replace <DB_USER>, <VPS_IP_or_%> and <DB_NAME> and run the SQL in Hostinger DB console
+#    CREATE USER 'deals247_user'@'72.61.235.42' IDENTIFIED BY 'strongpassword';
+#    GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, INDEX ON `u515501238_deals247_db`.* TO 'deals247_user'@'72.61.235.42';
+#    FLUSH PRIVILEGES;
+#
+#  - Test connection from VPS before importing schema:
+#    mysql -h $DB_HOST -P $DB_PORT -u $DB_USER -p"$DB_PASSWORD" -e "SELECT 1;"
+#  - If DB SSL is required by Hostinger, set DB_SSL=true and DB_SSL_CA_PATH to the CA file available on the VPS
 
 # 3. Build and deploy with Docker Compose (recommended for full-stack deploy)
 #    Two deployment modes:
